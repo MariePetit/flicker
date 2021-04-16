@@ -36,8 +36,7 @@ export const CreateAccount = () => {
         console.log("data", data);
         if (status === 201) {
           alert("Thank you for creating an account!");
-          // localStorage.setItem("resId", `${id}`);
-          setCurrentUser(data);
+          setCurrentUser(data.data);
           console.log(currentUser);
           history.push("/");
         }

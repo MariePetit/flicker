@@ -7,6 +7,7 @@ export const FlickerProvider = ({ children }) => {
   const [genres, setGenres] = useState(null);
   const [shows, setShows] = useState(null);
   const [reFetch, setReFetch] = useState(false);
+  const [watched, setWatched] = useState(false);
 
   useEffect(() => {
     fetch("/account/:id")
@@ -56,6 +57,8 @@ export const FlickerProvider = ({ children }) => {
         popularMovies,
         genres,
         shows,
+        watched,
+        setWatched,
       }}
     >
       {children}

@@ -11,6 +11,7 @@ const {
   getMovieDetails,
   getTvShowDetails,
   addToPersonalWatchlist,
+  addToWatched,
 } = require("./handlers");
 
 const PORT = 8000;
@@ -42,7 +43,9 @@ app.post("/create-account", createUser);
 app.post("/log-in", findUser);
 app.get("/shows", getTvShows);
 app.post("/shows/:id", getTvShowDetails);
-app.post("/personalWatchlist/:userId", addToPersonalWatchlist);
+app.post("/personalWatchlist/:id", addToPersonalWatchlist);
+// app.get("/watched/:id", getWatched);
+app.post("/watched/:id", addToWatched);
 
 //CATCH-ALL ENDPOINT
 app.get("*", (req, res) => {

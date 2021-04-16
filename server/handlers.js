@@ -54,7 +54,7 @@ const createUser = async (req, res) => {
       console.log(result);
       console.log(result.ops[0]);
       return (
-        res.status(201).json({ status: 201, _id, data: result.ops[0] }),
+        res.status(201).json({ status: 201, data: result.ops[0] }),
         await client.close(),
         console.log("Disconnected!")
       );
@@ -246,6 +246,8 @@ const getTvShowDetails = async (req, res) => {
 //ADD PERSONAL WATCHLIST ITEMS TO DB
 const addToPersonalWatchlist = async (req, res) => {
   const watchlistItem = req.body;
+  const { id } = req.params;
+
   console.log(watchlistItem);
   const client = await MongoClient(MONGO_URI, options);
 
@@ -254,13 +256,15 @@ const addToPersonalWatchlist = async (req, res) => {
   console.log("Connected!");
 
   try {
-    const query = { _id: userId };
+    const query = { _id: ObjectId(id) };
     console.log("query", query);
     const newValue = { $addToSet: { personalWatchlist: watchlistItem } };
     console.log("newValue", newValue);
-    const result = await db.collection("users").updateOne(query, newValue);
 
-    assert.strictEqual(1, result.modifiedCount);
+    const result = await db.collection("users").updateOne(query, newValue);
+    console.log("matchedCount", result.matchedCount);
+    console.log("modifiedCount", result.modifiedCount);
+    assert.strictEqual(result.modifiedCount, 1);
 
     res.status(202).json({
       status: 202,
@@ -279,6 +283,48 @@ const addToPersonalWatchlist = async (req, res) => {
   }
 };
 
+//ADD TO WATCHED
+const addToWatched = async (req, res) => {
+  const watchedItem = req.body;
+  const { id } = req.params;
+
+  console.log(watchedItem);
+  const client = await MongoClient(MONGO_URI, options);
+
+  await client.connect();
+  const db = client.db("flicker");
+  console.log("Connected!");
+
+  try {
+    const query = { _id: ObjectId(id) };
+    console.log("query", query);
+    const newValue = { $addToSet: { watched: watchedItem } };
+    console.log("newValue", newValue);
+
+    const result = await db.collection("users").updateOne(query, newValue);
+    console.log("matchedCount", result.matchedCount);
+    console.log("modifiedCount", result.modifiedCount);
+    assert.strictEqual(result.modifiedCount, 1);
+
+    res.status(202).json({
+      status: 202,
+      movie: watchedItem,
+      msg: "Added to watched!",
+    }),
+      await client.close(),
+      console.log("Disconnected!");
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      status: 400,
+      data: "User not found",
+      msg: err.message,
+    });
+  }
+};
+
+//GET ALL WATCHED
+
 module.exports = {
   createUser,
   findUser,
@@ -288,4 +334,5 @@ module.exports = {
   getMovieDetails,
   getTvShowDetails,
   addToPersonalWatchlist,
+  addToWatched,
 };
