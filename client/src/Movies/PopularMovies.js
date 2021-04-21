@@ -12,7 +12,6 @@ export const PopularMovies = () => {
     <Wrapper>
       <div>
         {popularMovies.map((movie) => {
-          console.log(movie);
           return <SmallCard movie={movie} />;
         })}
       </div>

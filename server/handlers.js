@@ -519,7 +519,7 @@ const addToWatched = async (req, res) => {
   try {
     const query = { _id: ObjectId(id) };
     const newValue = { $addToSet: { watched: watchedItem } };
-    const removeValue = { $pull: { id: watchedItem.id } };
+    const removeValue = { $pull: { watched: { id: watchedItem.id } } };
 
     //CHECK IF ALREADY WATCHED
     const loggedUser = await db.collection("users").findOne(query);
@@ -565,7 +565,64 @@ const addToWatched = async (req, res) => {
   }
 };
 
-//GET ALL WATCHED
+//ADD TO FAVORITES
+const addToFavorites = async (req, res) => {
+  const favoriteItem = req.body;
+  const { id } = req.params;
+
+  const client = await MongoClient(MONGO_URI, options);
+
+  await client.connect();
+  const db = client.db("flicker");
+  console.log("Connected!");
+
+  try {
+    const query = { _id: ObjectId(id) };
+    const newValue = { $addToSet: { favorites: favoriteItem } };
+    const removeValue = { $pull: { favorites: { id: favoriteItem.id } } };
+
+    //CHECK IF ALREADY IN FAVORITES
+    const loggedUser = await db.collection("users").findOne(query);
+
+    const alreadyAdded = loggedUser.favorites.some(
+      (item) => item.id === favoriteItem.id
+    );
+
+    if (alreadyAdded) {
+      const result = await db.collection("users").updateOne(query, removeValue);
+      assert.strictEqual(result.matchedCount, 1);
+
+      console.log("already added");
+      res.status(202).json({
+        status: 202,
+        data: removeValue,
+        msg: "Removed from favorites!",
+      });
+
+      //IF NOT ALREADY IN FAVORITES, THEN ADD TO DB
+    } else {
+      const result = await db.collection("users").updateOne(query, newValue);
+
+      assert.strictEqual(result.modifiedCount, 1);
+
+      res.status(202).json({
+        status: 202,
+        movie: favoriteItem,
+        msg: "Added to favorites!",
+      });
+    }
+
+    await client.close();
+    console.log("Disconnected!");
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      status: 400,
+      data: "User not found",
+      msg: err.message,
+    });
+  }
+};
 
 module.exports = {
   createUser,
@@ -580,4 +637,5 @@ module.exports = {
   addToPersonalWatchlist,
   addToWatched,
   removeFromWatchlist,
+  addToFavorites,
 };
