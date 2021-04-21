@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const {
   getAllMovies,
   createUser,
+  logUser,
   findUser,
   getGenres,
   getTvShows,
@@ -12,6 +13,7 @@ const {
   getTvShowDetails,
   addToPersonalWatchlist,
   addToWatched,
+  removeFromWatchlist,
 } = require("./handlers");
 
 const PORT = 8000;
@@ -40,11 +42,13 @@ app.get("/popular-movies", getAllMovies);
 app.post("/movies/:id", getMovieDetails);
 app.get("/genres", getGenres);
 app.post("/create-account", createUser);
-app.post("/log-in", findUser);
+app.post("/log-user", logUser);
+app.get("/user/:id", findUser);
+app.post("/link-user/:id", findUser);
 app.get("/shows", getTvShows);
 app.post("/shows/:id", getTvShowDetails);
-app.post("/personalWatchlist/:id", addToPersonalWatchlist);
-// app.get("/watched/:id", getWatched);
+app.post("/watchlist/:id", addToPersonalWatchlist);
+app.delete("/watchlist/:id", removeFromWatchlist);
 app.post("/watched/:id", addToWatched);
 
 //CATCH-ALL ENDPOINT

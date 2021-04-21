@@ -10,7 +10,6 @@ export const NavBar = () => {
   const history = useHistory();
 
   const onClick = () => {
-    const button = document.getElementById("button");
     if (currentUser) {
       setCurrentUser(null);
       history.push("/");
@@ -43,7 +42,7 @@ export const NavBar = () => {
               </h2>
             </div>
           )}
-          <Button id="button" onClick={onClick}>
+          <Button onClick={onClick}>
             {currentUser ? "Sign out" : "Sign In"}
           </Button>
         </NavSection>

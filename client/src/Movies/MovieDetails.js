@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 import styled from "styled-components";
@@ -24,7 +24,7 @@ export const MovieDetails = () => {
           setMovie(json.data);
         }
       });
-  }, []);
+  }, [specificMovie]);
 
   return movie ? (
     <Wrapper>

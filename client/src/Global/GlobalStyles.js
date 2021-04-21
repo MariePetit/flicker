@@ -12,6 +12,9 @@ export default createGlobalStyle`
   --primary-user-color:  #ff5c00;
   --secondary-user-color: #f49f0a;
   --third-user-color: #efca08;
+  --primary-other-color:#1577a6;
+  --secondary-other-color: #1f94cc;
+  --third-other-color: #aae4f9;
 } 
 html, body {
     max-width: 100vw;

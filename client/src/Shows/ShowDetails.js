@@ -24,7 +24,7 @@ export const ShowDetails = () => {
           setShow(json.data);
         }
       });
-  }, []);
+  }, [specificShow]);
 
   console.log(show);
   return show ? (

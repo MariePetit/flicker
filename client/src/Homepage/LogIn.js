@@ -10,7 +10,7 @@ export const LogIn = () => {
     password: "",
   };
 
-  const { setCurrentUser } = useContext(FlickerContext);
+  const { setCurrentUser, setLinkedUser } = useContext(FlickerContext);
   const history = useHistory();
   const [formData, setFormData] = useState(initialState);
   const ref = useRef(null);
@@ -22,7 +22,7 @@ export const LogIn = () => {
   //post to send back to backend formData /
   const handleSubmit = (ev) => {
     ev.preventDefault();
-    fetch("/log-in", {
+    fetch("/log-user", {
       method: "POST",
       body: JSON.stringify({ ...formData }),
       headers: {
@@ -36,6 +36,10 @@ export const LogIn = () => {
         if (status === 200) {
           alert("Welcome!");
           setCurrentUser(data.data);
+          localStorage.setItem("current-user-email", data.data.email);
+          localStorage.setItem("current-user-id", data.data._id);
+          localStorage.setItem("logged-in", "true");
+          setLinkedUser(data.data.linkedUser[0]);
           history.push("/");
         } else {
           alert("User Not Found");

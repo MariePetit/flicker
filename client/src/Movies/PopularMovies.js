@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 
 import { FlickerContext } from "../Global/FlickerContext";
-import { SmallMovieCard } from "./SmallMovieCard";
+import { SmallCard } from "../Global/SmallCard";
 
 export const PopularMovies = () => {
   const { popularMovies } = useContext(FlickerContext);
@@ -12,7 +12,8 @@ export const PopularMovies = () => {
     <Wrapper>
       <div>
         {popularMovies.map((movie) => {
-          return <SmallMovieCard movie={movie} />;
+          console.log(movie);
+          return <SmallCard movie={movie} />;
         })}
       </div>
     </Wrapper>

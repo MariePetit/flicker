@@ -7,7 +7,7 @@ import { PopularMovies } from "../Movies/PopularMovies";
 
 export const Homepage = () => {
   const { currentUser } = useContext(FlickerContext);
-  console.log(currentUser);
+
   return (
     <Wrapper>
       {currentUser && <PopularMovies />}

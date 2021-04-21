@@ -14,6 +14,8 @@ import { MovieDetails } from "./Movies/MovieDetails";
 import { WatchlistsPage } from "./Watchlists/WatchlistsPage";
 import { ShowDetails } from "./Shows/ShowDetails";
 import { Profile } from "./Profile/Profile";
+import { FlickerPartnerProfile } from "./Profile/FlickerPartnerProfile";
+import { SearchUser } from "./Profile/SearchUser";
 
 function App() {
   return (
@@ -54,6 +56,12 @@ function App() {
           </Route>
           <Route exact path="/shows/:id">
             <ShowDetails />
+          </Route>
+          <Route exact path="/link-account">
+            <SearchUser />
+          </Route>
+          <Route exact to="/flicker-partner">
+            <FlickerPartnerProfile />
           </Route>
         </Switch>
       </Wrapper>

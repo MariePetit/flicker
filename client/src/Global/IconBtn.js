@@ -34,4 +34,22 @@ const Wrapper = styled.button`
   background: transparent;
   cursor: pointer;
   text-align: center;
+  position: relative;
+  transition: 0.15s ease-in-out;
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    opacity: 0;
+  }
+
+  &:focus:after,
+  &:hover:after {
+    opacity: 0.12;
+  }
 `;

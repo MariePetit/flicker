@@ -33,11 +33,13 @@ export const CreateAccount = () => {
       .then((res) => res.json())
       .then((data) => {
         const { status } = data;
-        console.log("data", data);
         if (status === 201) {
           alert("Thank you for creating an account!");
           setCurrentUser(data.data);
-          console.log(currentUser);
+          window.localStorage.setItem(
+            "current-user",
+            JSON.stringify(currentUser)
+          );
           history.push("/");
         }
       });

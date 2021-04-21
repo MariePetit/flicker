@@ -1,8 +1,8 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { useParams } from "react-router";
 import styled from "styled-components";
 import FlickerContext from "../Global/FlickerContext";
-import { SmallMovieCard } from "./SmallMovieCard";
+import { SmallCard } from "../Global/SmallCard";
 
 export const SpecificGenre = () => {
   const genre = useParams();
@@ -20,7 +20,7 @@ export const SpecificGenre = () => {
     <Wrapper>
       <div>
         {filteredMovies.map((movie) => {
-          return <SmallMovieCard movie={movie} />;
+          return <SmallCard movie={movie} />;
         })}
       </div>
     </Wrapper>

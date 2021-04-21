@@ -1,7 +1,8 @@
 import React from "react";
 
 import styled from "styled-components";
-import { Watchlist } from "./Watchlist";
+import { JointWatchlist } from "./JointWatchlist";
+import { PersonalWatchlist } from "./PersonalWatchlist";
 
 export const WatchlistsPage = () => {
   return (
@@ -11,7 +12,8 @@ export const WatchlistsPage = () => {
         <Item>Personal Watchlist</Item>
         <Item>Joint Watchlist</Item>
       </Section>
-      <Watchlist />
+      <PersonalWatchlist />
+      <JointWatchlist />
     </Wrapper>
   );
 };

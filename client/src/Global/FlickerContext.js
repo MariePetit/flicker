@@ -3,19 +3,21 @@ import React, { createContext, useState, useEffect } from "react";
 export const FlickerContext = createContext(null);
 export const FlickerProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [linkedUser, setLinkedUser] = useState(null);
   const [popularMovies, setPopularMovies] = useState(null);
   const [genres, setGenres] = useState(null);
   const [shows, setShows] = useState(null);
-  const [reFetch, setReFetch] = useState(false);
-  const [watched, setWatched] = useState(false);
+  const [updatingUser, setUpdatingUser] = useState(false);
 
   useEffect(() => {
-    fetch("/account/:id")
-      .then((res) => res.json())
-      .then((json) => {
-        setCurrentUser(json.profile);
+    if (localStorage.getItem("logged-in") === "true") {
+      fetch(`/user/${localStorage.getItem("current-user-id")}`).then((res) => {
+        res.json().then((data) => {
+          setCurrentUser(data.data);
+        });
       });
-  }, []);
+    }
+  }, [updatingUser]);
 
   useEffect(() => {
     fetch("/popular-movies")
@@ -25,7 +27,7 @@ export const FlickerProvider = ({ children }) => {
           setPopularMovies(json.data);
         }
       });
-  }, [reFetch]);
+  }, [updatingUser]);
 
   useEffect(() => {
     fetch("/genres")
@@ -35,7 +37,7 @@ export const FlickerProvider = ({ children }) => {
           setGenres(json.data);
         }
       });
-  }, [reFetch]);
+  }, [updatingUser]);
 
   useEffect(() => {
     fetch("/shows")
@@ -45,20 +47,20 @@ export const FlickerProvider = ({ children }) => {
           setShows(json.data);
         }
       });
-  }, [reFetch]);
+  }, [updatingUser]);
 
   return (
     <FlickerContext.Provider
       value={{
         currentUser,
         setCurrentUser,
-        reFetch,
-        setReFetch,
+        updatingUser,
+        setUpdatingUser,
         popularMovies,
         genres,
         shows,
-        watched,
-        setWatched,
+        linkedUser,
+        setLinkedUser,
       }}
     >
       {children}

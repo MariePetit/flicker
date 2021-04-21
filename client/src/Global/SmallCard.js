@@ -2,10 +2,10 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 import styled from "styled-components";
-import { ActionBar } from "../Global/ActionBar";
+import { ActionBar } from "./ActionBar";
 
-export const SmallMovieCard = ({ movie }) => {
-  return (
+export const SmallCard = ({ movie, show }) => {
+  return movie ? (
     <Wrapper>
       <div>
         <h2>{movie.title}</h2>
@@ -20,6 +20,24 @@ export const SmallMovieCard = ({ movie }) => {
       ></Poster>
       <div>
         <ActionBar movie={movie} />
+      </div>
+    </Wrapper>
+  ) : (
+    <Wrapper>
+      <div>
+        <h2>{show.name}</h2>
+      </div>
+      <Poster
+        to={`/shows/${show.id}`}
+        style={{
+          backgroundImage: `url(http://image.tmdb.org/t/p/w500${show.poster_path})`,
+          backgroundPosition: "center",
+          backgroundSize: "contain",
+          backgroundRepeat: "none",
+        }}
+      ></Poster>
+      <div>
+        <ActionBar show={show} />
       </div>
     </Wrapper>
   );

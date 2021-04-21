@@ -12,8 +12,6 @@ const options = {
   useUnifiedTopology: true,
 };
 
-const pageNumber = Math.floor(Math.random() * 500);
-
 //CREATING A USER IN DB
 const createUser = async (req, res) => {
   const client = await MongoClient(MONGO_URI, options);
@@ -35,7 +33,7 @@ const createUser = async (req, res) => {
     const result = await db.collection("users").findOne({ email });
 
     if (result) {
-      res.status(400).json({ status: 40, msg: "This email already exists." });
+      res.status(400).json({ status: 400, msg: "This email already exists." });
     } else {
       const result = await db.collection("users").insertOne({
         firstName,
@@ -47,12 +45,11 @@ const createUser = async (req, res) => {
         watched: [],
         showsCurrentlyWatching: [],
         personalWatchlist: [],
-        joinedWatchlist: [],
-        linkedUser: "",
+        jointWatchlist: [],
+        linkedUser: [],
       });
       assert.strictEqual(1, result.insertedCount);
-      console.log(result);
-      console.log(result.ops[0]);
+
       return (
         res.status(201).json({ status: 201, data: result.ops[0] }),
         await client.close(),
@@ -67,8 +64,8 @@ const createUser = async (req, res) => {
   console.log("Disconnected!");
 };
 
-//FINDING USER IN DB
-const findUser = async (req, res) => {
+//LOGGING IN
+const logUser = async (req, res) => {
   const { email, password } = req.body;
   const client = await MongoClient(MONGO_URI, options);
 
@@ -77,19 +74,115 @@ const findUser = async (req, res) => {
   console.log("Connected!");
 
   try {
-    const result = await db.collection("users").findOne({ email });
+    const mainUser = await db.collection("users").findOne({ email });
+    const mainUserId = { _id: ObjectId(mainUser._id) };
 
-    if (!result) {
+    if (!mainUser) {
       return res.status(404).json({ status: 404, msg: "Not Found" });
     }
-    const validPassword = await bcrypt.compare(password, result.password);
+    const validPassword = await bcrypt.compare(password, mainUser.password);
 
     if (validPassword) {
-      return res.status(200).json({ status: 200, data: result });
+      if (mainUser.linkedUser.length > 0) {
+        const otherUser = mainUser.linkedUser[0];
+        const otherUserId = { _id: ObjectId(otherUser._id) };
+
+        const updatedOtherUser = await db
+          .collection("users")
+          .findOne(otherUserId);
+
+        const newValue = [{ $set: { linkedUser: updatedOtherUser } }];
+
+        const updatingOtherUserInMain = await db
+          .collection("users")
+          .updateOne(mainUserId, newValue);
+
+        assert.strictEqual(updatingOtherUserInMain.matchedCount, 1);
+
+        return res.status(200).json({ status: 200, data: mainUser });
+      } else {
+        return res.status(200).json({ status: 200, data: mainUser });
+      }
     } else {
       return res
         .status(401)
         .json({ status: 401, msg: "Password is incorrect!" });
+    }
+  } catch (err) {
+    console.log(err.message);
+  }
+  client.close();
+  console.log("Disconnected!");
+};
+
+//FIND USER
+const findUser = async (req, res) => {
+  const { id } = req.params;
+
+  const client = await MongoClient(MONGO_URI, options);
+
+  await client.connect();
+  const db = client.db("flicker");
+  console.log("Connected!");
+
+  try {
+    //finding main user
+    const mainUserId = { _id: ObjectId(id) };
+    const mainUser = await db.collection("users").findOne(mainUserId);
+
+    return res.status(200).json({ status: 200, data: mainUser });
+  } catch (err) {
+    console.log(err.message);
+  }
+  client.close();
+  console.log("Disconnected!");
+};
+
+//LINK USER
+const linkUser = async (req, res) => {
+  const { email } = req.body;
+  const { id } = req.params;
+
+  const client = await MongoClient(MONGO_URI, options);
+
+  await client.connect();
+  const db = client.db("flicker");
+  console.log("Connected!");
+
+  try {
+    //finding main user and other user
+    const mainUserId = { _id: ObjectId(id) };
+    const mainUser = await db.collection("users").findOne(mainUserId);
+    const otherUser = await db.collection("users").findOne({ email });
+    const otherUserId = { _id: ObjectId(otherUser._id) };
+
+    //adding otherUser as a LinkedUser
+    const newValue = { $addToSet: { linkedUser: otherUser } };
+    const newValueOther = { $addToSet: { linkedUser: mainUser } };
+
+    //if no otherUser, return error
+    if (!otherUser) {
+      console.log("User not found");
+      return res.status(404).json({ status: 404, msg: "User Not Found" });
+    } else {
+      //if otherUser, adds them to main user's linkedAccount array
+      const addingOtherUserToMain = await db
+        .collection("users")
+        .updateOne(mainUserId, newValue);
+
+      //now add main user to second user's linked account
+      const addingMainUserToOtheruser = await db
+        .collection("users")
+        .updateOne(otherUserId, newValueOther);
+
+      assert.strictEqual(addingOtherUserToMain.matchedCount, 1);
+      assert.strictEqual(addingMainUserToOtheruser.matchedCount, 1);
+
+      res.status(202).json({
+        status: 202,
+        data: { mainUser, otherUser },
+        msg: "Accounts linked!",
+      });
     }
   } catch (err) {
     console.log(err.message);
@@ -170,7 +263,6 @@ const getMovieDetails = async (req, res) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         res.status(200).json({ status: 200, data });
       });
   } catch (err) {
@@ -235,7 +327,6 @@ const getTvShowDetails = async (req, res) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         res.status(200).json({ status: 200, data });
       });
   } catch (err) {
@@ -248,7 +339,143 @@ const addToPersonalWatchlist = async (req, res) => {
   const watchlistItem = req.body;
   const { id } = req.params;
 
-  console.log(watchlistItem);
+  const client = await MongoClient(MONGO_URI, options);
+
+  await client.connect();
+  const db = client.db("flicker");
+  console.log("Connected!");
+
+  try {
+    const mainUserId = { _id: ObjectId(id) };
+    const mainUser = await db.collection("users").findOne(mainUserId);
+
+    const removeValue = {
+      $pull: { personalWatchlist: { id: watchlistItem.id } },
+    };
+
+    //CHECK IF ALREADY IN PERSONAL WATCHLIST
+    const alreadyAdded = mainUser.personalWatchlist.some(
+      (item) => item.id === watchlistItem.id
+    );
+
+    //IF NO OTHER USER
+    if (mainUser.linkedUser.length === 0) {
+      //if already added, then remove movie
+
+      if (alreadyAdded) {
+        console.log("no other user, already in personal watchlist");
+        const result = await db
+          .collection("users")
+          .updateOne(mainUserId, removeValue);
+        assert.strictEqual(result.matchedCount, 1);
+
+        res.status(202).json({
+          status: 202,
+          data: removeValue,
+          msg: "Removed from personal watchlist!",
+        });
+
+        //if not already in personal watchlist, then add it
+      } else {
+        console.log("no other user, not yet in personal watchlist");
+        let newValue = { $addToSet: { personalWatchlist: watchlistItem } };
+        const result = await db
+          .collection("users")
+          .updateOne(mainUserId, newValue);
+
+        assert.strictEqual(result.matchedCount, 1);
+
+        res.status(202).json({
+          status: 202,
+          data: newValue,
+          msg: "Added to personal watchlist!",
+        });
+      }
+    }
+    //IF THERE IS A LINKED USER
+    else {
+      const otherUser = mainUser.linkedUser[0];
+      const otherUserId = { _id: ObjectId(otherUser._id) };
+
+      const alreadyAddedOther = otherUser.personalWatchlist.some(
+        (item) => item.id === watchlistItem.id
+      );
+      //check if movie is already in main user's personal watchlist
+      if (alreadyAdded) {
+        console.log("linked user, already in personal watchlist");
+        const result = await db
+          .collection("users")
+          .updateOne(mainUserId, removeValue);
+        assert.strictEqual(result.matchedCount, 1);
+
+        res.status(202).json({
+          status: 202,
+          data: removeValue,
+          msg: "Removed from personal watchlist!",
+        });
+
+        //if not already in watchlist, but movie is already in linked user's watchlist
+      } else if (!alreadyAdded && alreadyAddedOther) {
+        console.log(
+          "linked user, not in personal watchlist, in linked's watched list"
+        );
+        let newValue = { $addToSet: { jointWatchlist: watchlistItem } };
+        const addMovieToMainJointWatchlist = await db
+          .collection("users")
+          .updateOne(mainUserId, newValue);
+
+        const addMovieToOtherJointWatchlist = await db
+          .collection("users")
+          .updateOne(otherUserId, newValue);
+
+        const removeMovieFromOtherPersonalWatchlist = await db
+          .collection("users")
+          .updateOne(otherUserId, removeValue);
+
+        assert.strictEqual(addMovieToMainJointWatchlist.matchedCount, 1);
+        assert.strictEqual(addMovieToOtherJointWatchlist.matchedCount, 1);
+        assert.strictEqual(
+          removeMovieFromOtherPersonalWatchlist.matchedCount,
+          1
+        );
+
+        res.status(202).json({
+          status: 202,
+          data: watchlistItem,
+          msg: "Added to joint watchlist!",
+        });
+      }
+
+      //if not in anyone's watchlist already
+      else {
+        console.log("linked user, not in anyone's personal watchlist");
+        let newValue = { $addToSet: { personalWatchlist: watchlistItem } };
+        const result = await db
+          .collection("users")
+          .updateOne(mainUserId, newValue);
+
+        assert.strictEqual(result.matchedCount, 1);
+
+        res.status(202).json({
+          status: 202,
+          data: newValue,
+          msg: "Added to personal watchlist!",
+        });
+      }
+
+      await client.close();
+      console.log("Disconnected!");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+//REMOVE FROM WATCHLIST
+const removeFromWatchlist = async (req, res) => {
+  const item = req.body;
+  const { id } = req.params;
+
   const client = await MongoClient(MONGO_URI, options);
 
   await client.connect();
@@ -257,29 +484,24 @@ const addToPersonalWatchlist = async (req, res) => {
 
   try {
     const query = { _id: ObjectId(id) };
-    console.log("query", query);
-    const newValue = { $addToSet: { personalWatchlist: watchlistItem } };
-    console.log("newValue", newValue);
+    const removeValue = {
+      $pull: { personalWatchlist: { id: item.id } },
+    };
 
-    const result = await db.collection("users").updateOne(query, newValue);
-    console.log("matchedCount", result.matchedCount);
-    console.log("modifiedCount", result.modifiedCount);
-    assert.strictEqual(result.modifiedCount, 1);
+    const result = await db.collection("users").updateOne(query, removeValue);
+    assert.strictEqual(result.matchedCount, 1);
+
+    console.log("removed?");
 
     res.status(202).json({
       status: 202,
-      data: newValue,
-      msg: "Added to personal watchlist!",
-    }),
-      await client.close(),
-      console.log("Disconnected!");
+      data: removeValue,
+      msg: "Removed from personal watchlist!",
+    });
+    await client.close();
+    console.log("Disconnected!");
   } catch (err) {
     console.log(err);
-    res.status(400).json({
-      status: 400,
-      data: "User Watchlist not found",
-      msg: err.message,
-    });
   }
 };
 
@@ -288,7 +510,6 @@ const addToWatched = async (req, res) => {
   const watchedItem = req.body;
   const { id } = req.params;
 
-  console.log(watchedItem);
   const client = await MongoClient(MONGO_URI, options);
 
   await client.connect();
@@ -297,22 +518,43 @@ const addToWatched = async (req, res) => {
 
   try {
     const query = { _id: ObjectId(id) };
-    console.log("query", query);
     const newValue = { $addToSet: { watched: watchedItem } };
-    console.log("newValue", newValue);
+    const removeValue = { $pull: { id: watchedItem.id } };
 
-    const result = await db.collection("users").updateOne(query, newValue);
-    console.log("matchedCount", result.matchedCount);
-    console.log("modifiedCount", result.modifiedCount);
-    assert.strictEqual(result.modifiedCount, 1);
+    //CHECK IF ALREADY WATCHED
+    const loggedUser = await db.collection("users").findOne(query);
 
-    res.status(202).json({
-      status: 202,
-      movie: watchedItem,
-      msg: "Added to watched!",
-    }),
-      await client.close(),
-      console.log("Disconnected!");
+    const alreadyAdded = loggedUser.watched.some(
+      (item) => item.id === watchedItem.id
+    );
+
+    if (alreadyAdded) {
+      const result = await db.collection("users").updateOne(query, removeValue);
+      assert.strictEqual(result.matchedCount, 1);
+
+      console.log("removed?");
+
+      res.status(202).json({
+        status: 202,
+        data: removeValue,
+        msg: "Removed from watched!",
+      });
+
+      //IF NOT ALREADY WATCHED, THEN ADD TO DB
+    } else {
+      const result = await db.collection("users").updateOne(query, newValue);
+
+      assert.strictEqual(result.modifiedCount, 1);
+
+      res.status(202).json({
+        status: 202,
+        movie: watchedItem,
+        msg: "Added to watched!",
+      });
+    }
+
+    await client.close();
+    console.log("Disconnected!");
   } catch (err) {
     console.log(err);
     res.status(400).json({
@@ -327,7 +569,9 @@ const addToWatched = async (req, res) => {
 
 module.exports = {
   createUser,
+  logUser,
   findUser,
+  linkUser,
   getAllMovies,
   getGenres,
   getTvShows,
@@ -335,4 +579,5 @@ module.exports = {
   getTvShowDetails,
   addToPersonalWatchlist,
   addToWatched,
+  removeFromWatchlist,
 };

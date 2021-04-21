@@ -2,15 +2,16 @@ import React, { useContext } from "react";
 
 import styled from "styled-components";
 import FlickerContext from "../Global/FlickerContext";
-import SmallShowCard from "./SmallShowCard";
+import { SmallCard } from "../Global/SmallCard";
 
 export const TvShows = () => {
   const { shows } = useContext(FlickerContext);
+
   return shows ? (
     <Wrapper>
       <div>
         {shows.map((show) => {
-          return <SmallShowCard show={show} />;
+          return <SmallCard show={show} />;
         })}
       </div>
     </Wrapper>
