@@ -15,6 +15,8 @@ const {
   addToWatched,
   removeFromWatchlist,
   addToFavorites,
+  addToLiked,
+  addToDisliked,
 } = require("./handlers");
 
 const PORT = 8000;
@@ -52,6 +54,8 @@ app.post("/watchlist/:id", addToPersonalWatchlist);
 app.delete("/watchlist/:id", removeFromWatchlist);
 app.post("/watched/:id", addToWatched);
 app.post("/favorites/:id", addToFavorites);
+app.post("/liked/:id", addToLiked);
+app.post("/disliked/:id", addToDisliked);
 
 //CATCH-ALL ENDPOINT
 app.get("*", (req, res) => {

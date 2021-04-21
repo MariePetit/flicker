@@ -12,6 +12,7 @@ const moment = require("moment");
 export const Profile = () => {
   const { currentUser, linkedUser } = useContext(FlickerContext);
   const [lastMovieWatched, setLastMovieWatched] = useState(null);
+  const [lastLiked, setLastLiked] = useState(null);
 
   useEffect(() => {
     if (currentUser.watched.length > 0) {
@@ -19,6 +20,16 @@ export const Profile = () => {
     }
   }, [currentUser.watched]);
 
+  useEffect(() => {
+    if (currentUser.liked.length > 0) {
+      setLastLiked(
+        currentUser.liked.slice((Math.max(currentUser.liked.length) - 5, 0))
+      );
+    }
+  }, [currentUser.liked]);
+
+  console.log(currentUser.liked);
+  console.log(lastLiked);
   return (
     <Wrapper>
       <InfoSection>
@@ -59,9 +70,13 @@ export const Profile = () => {
           </UserInfo>
 
           <CardsSection>
-            {currentUser.favorites.map((favorite) => {
-              return <SmallCardAlt item={favorite} />;
-            })}
+            {currentUser.favorites.length > 0 ? (
+              currentUser.favorites.map((favorite) => {
+                return <SmallCardAlt item={favorite} />;
+              })
+            ) : (
+              <div>No favorites yet.</div>
+            )}
           </CardsSection>
         </SubDiv>
 
@@ -91,6 +106,15 @@ export const Profile = () => {
             <FiThumbsUp size={25} color="rgb(94, 198, 65)" />
             Most Recently Liked
           </UserInfo>
+          <CardsSection>
+            {lastLiked ? (
+              lastLiked.map((item) => {
+                return <SmallCardAlt item={item} />;
+              })
+            ) : (
+              <div>No movies liked yet.</div>
+            )}
+          </CardsSection>
         </SubDiv>
       </DetailsSection>
     </Wrapper>
@@ -187,4 +211,6 @@ const CardsSection = styled.div`
   flex-direction: row;
 `;
 
-const UserInfo = styled.h3``;
+const UserInfo = styled.h3`
+  margin: 10px 0;
+`;

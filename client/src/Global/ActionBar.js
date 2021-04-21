@@ -23,6 +23,8 @@ export const ActionBar = ({ movie, show }) => {
   const [isInterested, setIsInterested] = useState(false);
   const [watched, setWatched] = useState(false);
   const [favorite, setFavorite] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
 
   //-----------------------------WATCHLIST------------------------------------
 
@@ -136,6 +138,64 @@ export const ActionBar = ({ movie, show }) => {
     }).then(setUpdatingUser(!updatingUser));
   };
 
+  //-----------------------------LIKED------------------------------------
+
+  //CHECK IF ALREADY LIKED
+  let movieAlreadyLiked =
+    movie && currentUser.liked.some((item) => item.id === movie.id);
+
+  let showAlreadyLiked =
+    show && currentUser.liked.some((item) => item.id === show.id);
+
+  useEffect(() => {
+    if (movieAlreadyLiked || showAlreadyLiked) {
+      setLiked(true);
+    }
+  }, [movieAlreadyLiked, showAlreadyLiked]);
+
+  //TOGGLE LIKED
+  const toggleLiked = () => {
+    setLiked(!liked);
+    setDisliked(false);
+    fetch(`/liked/${currentUser._id}`, {
+      method: "POST",
+      body: JSON.stringify({ ...(movie || show) }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    }).then(setUpdatingUser(!updatingUser));
+  };
+
+  //-----------------------------DISLIKED------------------------------------
+
+  //CHECK IF ALREADY DISLIKED
+  let movieAlreadyDisliked =
+    movie && currentUser.disliked.some((item) => item.id === movie.id);
+
+  let showAlreadyDisliked =
+    show && currentUser.disliked.some((item) => item.id === show.id);
+
+  useEffect(() => {
+    if (movieAlreadyDisliked || showAlreadyDisliked) {
+      setDisliked(true);
+    }
+  }, [movieAlreadyDisliked, showAlreadyDisliked]);
+
+  //TOGGLE DISLIKED
+  const toggleDisliked = () => {
+    setDisliked(!disliked);
+    setLiked(false);
+    fetch(`/disliked/${currentUser._id}`, {
+      method: "POST",
+      body: JSON.stringify({ ...(movie || show) }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    }).then(setUpdatingUser(!updatingUser));
+  };
+
   return (
     <Wrapper>
       {/* FAVORITE */}
@@ -150,8 +210,16 @@ export const ActionBar = ({ movie, show }) => {
       {watched ? (
         <>
           {/* //DIDN'T LIKE */}
-          <IconBtn size={30} color="rgb(255, 0, 0)">
-            <FiThumbsDown size={30} />
+          <IconBtn size={30} color="rgb(255, 0, 0)" onClick={toggleDisliked}>
+            {disliked ? (
+              <FiThumbsDown
+                size={30}
+                isToggled={disliked}
+                color="rgb(255, 0, 0)"
+              />
+            ) : (
+              <FiThumbsDown size={30} isToggled={disliked} />
+            )}
           </IconBtn>
 
           {/* WATCHED */}
@@ -160,8 +228,16 @@ export const ActionBar = ({ movie, show }) => {
           </IconBtn>
 
           {/* //LIKED */}
-          <IconBtn size={30} color="rgb(30, 144, 255)">
-            <FiThumbsUp size={30} />
+          <IconBtn size={30} color="rgb(94, 198, 65)" onClick={toggleLiked}>
+            {liked ? (
+              <FiThumbsUp
+                size={30}
+                isToggled={liked}
+                color="rgb(94, 198, 65)"
+              />
+            ) : (
+              <FiThumbsUp size={30} isToggled={liked} />
+            )}
           </IconBtn>
         </>
       ) : (

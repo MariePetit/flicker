@@ -12,7 +12,7 @@ const options = {
   useUnifiedTopology: true,
 };
 
-//CREATING A USER IN DB
+//-----------------------------CREATE USER------------------------------------
 const createUser = async (req, res) => {
   const client = await MongoClient(MONGO_URI, options);
 
@@ -22,13 +22,12 @@ const createUser = async (req, res) => {
   const db = client.db("flicker");
   console.log("Connected!");
 
-  //check if email already exists before adding user!
-
   try {
     //Encrypting passwords when added to db
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     const date = new Date();
+
     //check if email is already in db
     const result = await db.collection("users").findOne({ email });
 
@@ -42,6 +41,8 @@ const createUser = async (req, res) => {
         password: hashedPassword,
         joinedDate: date,
         favorites: [],
+        liked: [],
+        disliked: [],
         watched: [],
         showsCurrentlyWatching: [],
         personalWatchlist: [],
@@ -64,7 +65,7 @@ const createUser = async (req, res) => {
   console.log("Disconnected!");
 };
 
-//LOGGING IN
+//-----------------------------LOGGING IN------------------------------------
 const logUser = async (req, res) => {
   const { email, password } = req.body;
   const client = await MongoClient(MONGO_URI, options);
@@ -115,7 +116,7 @@ const logUser = async (req, res) => {
   console.log("Disconnected!");
 };
 
-//FIND USER
+//-------------------FINDING USER (TO AUTHENTICATE LOCAL STORAGE & UPDATE CURRENT USER----------------
 const findUser = async (req, res) => {
   const { id } = req.params;
 
@@ -126,7 +127,6 @@ const findUser = async (req, res) => {
   console.log("Connected!");
 
   try {
-    //finding main user
     const mainUserId = { _id: ObjectId(id) };
     const mainUser = await db.collection("users").findOne(mainUserId);
 
@@ -138,7 +138,7 @@ const findUser = async (req, res) => {
   console.log("Disconnected!");
 };
 
-//LINK USER
+//----------------------------------LINKING USERS------------------------------------
 const linkUser = async (req, res) => {
   const { email } = req.body;
   const { id } = req.params;
@@ -191,7 +191,7 @@ const linkUser = async (req, res) => {
   console.log("Disconnected!");
 };
 
-//GET POPULAR MOVIES
+//-----------------------------GET POPULAR MOVIES------------------------------------
 const getAllMovies = async (req, res) => {
   const url1 = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
   const url2 = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=2`;
@@ -236,7 +236,7 @@ const getAllMovies = async (req, res) => {
   }
 };
 
-//GET MOVIE GENRES
+//-----------------------------GET MOVIE GENRES------------------------------------
 const getGenres = async (req, res) => {
   const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-US`;
   try {
@@ -251,7 +251,7 @@ const getGenres = async (req, res) => {
   }
 };
 
-//GET MOVIE DETAILS
+//-----------------------------GET MOVIE DETAILS------------------------------------
 const getMovieDetails = async (req, res) => {
   const movieId = req.body;
   const movie_id = movieId.id;
@@ -270,7 +270,7 @@ const getMovieDetails = async (req, res) => {
   }
 };
 
-//GET POPULAR TV SHOWS
+//-----------------------------GET POPULAR SHOWS------------------------------------
 const getTvShows = async (req, res) => {
   const url1 = `https://api.themoviedb.org/3/tv/popular?api_key=${API_KEY}&language=en-US&page=1`;
   const url2 = `https://api.themoviedb.org/3/tv/popular?api_key=${API_KEY}&language=en-US&page=2`;
@@ -315,7 +315,7 @@ const getTvShows = async (req, res) => {
   }
 };
 
-//GET TV SHOW DETAILS
+//-----------------------------GET TV SHOW DETAILS------------------------------------
 const getTvShowDetails = async (req, res) => {
   const showId = req.body;
   const show_id = showId.id;
@@ -334,7 +334,7 @@ const getTvShowDetails = async (req, res) => {
   }
 };
 
-//ADD PERSONAL WATCHLIST ITEMS TO DB
+//-----------------------------ADD ITEMS TO WATCHLISTS------------------------------------
 const addToPersonalWatchlist = async (req, res) => {
   const watchlistItem = req.body;
   const { id } = req.params;
@@ -471,7 +471,7 @@ const addToPersonalWatchlist = async (req, res) => {
   }
 };
 
-//REMOVE FROM WATCHLIST
+//-------------------------REMOVE FROM WATCHLISTS (ON WATCHLISTS' PAGE)-------------------------------
 const removeFromWatchlist = async (req, res) => {
   const item = req.body;
   const { id } = req.params;
@@ -505,7 +505,7 @@ const removeFromWatchlist = async (req, res) => {
   }
 };
 
-//ADD TO WATCHED
+//-----------------------------ADD TO WATCHED------------------------------------
 const addToWatched = async (req, res) => {
   const watchedItem = req.body;
   const { id } = req.params;
@@ -565,7 +565,7 @@ const addToWatched = async (req, res) => {
   }
 };
 
-//ADD TO FAVORITES
+//-----------------------------ADD TO FAVORITES------------------------------------
 const addToFavorites = async (req, res) => {
   const favoriteItem = req.body;
   const { id } = req.params;
@@ -624,6 +624,164 @@ const addToFavorites = async (req, res) => {
   }
 };
 
+//-----------------------------ADD TO LIKED------------------------------------
+const addToLiked = async (req, res) => {
+  const likedItem = req.body;
+  const { id } = req.params;
+
+  const client = await MongoClient(MONGO_URI, options);
+
+  await client.connect();
+  const db = client.db("flicker");
+  console.log("Connected!");
+
+  try {
+    const query = { _id: ObjectId(id) };
+    const newValue = { $addToSet: { liked: likedItem } };
+    const removeLiked = { $pull: { liked: { id: likedItem.id } } };
+    const removeDisliked = { $pull: { disliked: { id: likedItem.id } } };
+
+    //CHECK IF ALREADY IN LIKED
+    const loggedUser = await db.collection("users").findOne(query);
+
+    const alreadyLiked = loggedUser.liked.some(
+      (item) => item.id === likedItem.id
+    );
+
+    const alreadyDisliked = loggedUser.disliked.some(
+      (item) => item.id === likedItem.id
+    );
+
+    if (alreadyLiked) {
+      const result = await db.collection("users").updateOne(query, removeLiked);
+      assert.strictEqual(result.matchedCount, 1);
+
+      res.status(202).json({
+        status: 202,
+        data: removeLiked,
+        msg: "Removed from liked!",
+      });
+
+      //IF NOT ALREADY ADDED, CHECK IF IS IN LIKED
+    } else if (!alreadyLiked && alreadyDisliked) {
+      const remove = await db
+        .collection("users")
+        .updateOne(query, removeDisliked);
+      const add = await db.collection("users").updateOne(query, newValue);
+
+      assert.strictEqual(remove.matchedCount, 1);
+      assert.strictEqual(add.modifiedCount, 1);
+
+      res.status(202).json({
+        status: 202,
+        data: likedItem,
+        msg: "Added to liked!",
+      });
+
+      //IF NOT ALREADY IN LIKED, THEN ADD TO DB
+    } else {
+      const result = await db.collection("users").updateOne(query, newValue);
+
+      assert.strictEqual(result.modifiedCount, 1);
+
+      res.status(202).json({
+        status: 202,
+        data: likedItem,
+        msg: "Added to liked!",
+      });
+    }
+
+    await client.close();
+    console.log("Disconnected!");
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      status: 400,
+      data: "User not found",
+      msg: err.message,
+    });
+  }
+};
+
+//-----------------------------ADD TO DISLIKED------------------------------------
+const addToDisliked = async (req, res) => {
+  const dislikedItem = req.body;
+  const { id } = req.params;
+
+  const client = await MongoClient(MONGO_URI, options);
+
+  await client.connect();
+  const db = client.db("flicker");
+  console.log("Connected!");
+
+  try {
+    const query = { _id: ObjectId(id) };
+    const newValue = { $addToSet: { disliked: dislikedItem } };
+    const removeLiked = { $pull: { liked: { id: dislikedItem.id } } };
+    const removeDisliked = { $pull: { disliked: { id: dislikedItem.id } } };
+
+    const loggedUser = await db.collection("users").findOne(query);
+
+    const alreadyAdded = loggedUser.disliked.some(
+      (item) => item.id === dislikedItem.id
+    );
+
+    const alreadyLiked = loggedUser.liked.some(
+      (item) => item.id === dislikedItem.id
+    );
+
+    //CHECK IF ALREADY IN DISLIKED
+    if (alreadyAdded) {
+      const result = await db
+        .collection("users")
+        .updateOne(query, removeDisliked);
+      assert.strictEqual(result.matchedCount, 1);
+
+      res.status(202).json({
+        status: 202,
+        data: removeDisliked,
+        msg: "Removed from liked!",
+      });
+
+      //IF NOT ALREADY ADDED, CHECK IF IS IN LIKED
+    } else if (!alreadyAdded && alreadyLiked) {
+      const remove = await db.collection("users").updateOne(query, removeLiked);
+      const add = await db.collection("users").updateOne(query, newValue);
+
+      assert.strictEqual(remove.matchedCount, 1);
+      assert.strictEqual(add.modifiedCount, 1);
+
+      res.status(202).json({
+        status: 202,
+        data: dislikedItem,
+        msg: "Added to disliked!",
+      });
+
+      //IF NOT ALREADY IN DISLIKED, THEN ADD TO DB
+    } else {
+      const result = await db.collection("users").updateOne(query, newValue);
+
+      assert.strictEqual(result.modifiedCount, 1);
+
+      res.status(202).json({
+        status: 202,
+        data: dislikedItem,
+        msg: "Added to disliked!",
+      });
+    }
+
+    await client.close();
+    console.log("Disconnected!");
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      status: 400,
+      data: "User not found",
+      msg: err.message,
+    });
+  }
+};
+
 module.exports = {
   createUser,
   logUser,
@@ -638,4 +796,6 @@ module.exports = {
   addToWatched,
   removeFromWatchlist,
   addToFavorites,
+  addToLiked,
+  addToDisliked,
 };
