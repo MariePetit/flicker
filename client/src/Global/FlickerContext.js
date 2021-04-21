@@ -27,7 +27,7 @@ export const FlickerProvider = ({ children }) => {
           setPopularMovies(json.data);
         }
       });
-  }, [updatingUser]);
+  }, []);
 
   useEffect(() => {
     fetch("/genres")
@@ -37,7 +37,7 @@ export const FlickerProvider = ({ children }) => {
           setGenres(json.data);
         }
       });
-  }, [updatingUser]);
+  }, []);
 
   useEffect(() => {
     fetch("/shows")
@@ -47,7 +47,7 @@ export const FlickerProvider = ({ children }) => {
           setShows(json.data);
         }
       });
-  }, [updatingUser]);
+  }, []);
 
   return (
     <FlickerContext.Provider

@@ -22,6 +22,9 @@ export const ActionBar = ({ movie, show }) => {
 
   const [isInterested, setIsInterested] = useState(false);
   const [watched, setWatched] = useState(false);
+  const [favorite, setFavorite] = useState(false);
+
+  //-----------------------------WATCHLIST------------------------------------
 
   //INDICATE MOVIES/SHOWS FROM WATCHLIST AS ALREADY ADDED
   let alreadyAddedMoviePersonal =
@@ -50,21 +53,8 @@ export const ActionBar = ({ movie, show }) => {
     }
   }, [alreadyAddedMovieJoint, alreadyAddedShowJoint]);
 
-  //INDICATE MOVIES/SHOWS ALREADY WATCHED AS WATCHED
-  let alreadyWatchedMovies =
-    movie && currentUser.watched.some((item) => item.id === movie.id);
-
-  let alreadyWatchedShows =
-    show && currentUser.watched.some((item) => item.id === show.id);
-
-  useEffect(() => {
-    if (alreadyWatchedMovies || alreadyWatchedShows) {
-      setWatched(true);
-    }
-  }, [alreadyWatchedMovies, alreadyWatchedShows]);
-
+  //TOGGLE WATCHLIST
   const toggleWatchlist = () => {
-    // console.log(currentUser);
     setIsInterested(!isInterested);
     fetch(`/watchlist/${currentUser._id}`, {
       method: "POST",
@@ -90,7 +80,22 @@ export const ActionBar = ({ movie, show }) => {
       })
       .then(setUpdatingUser(!updatingUser));
   };
+  //-----------------------------WATCHED------------------------------------
 
+  //INDICATE MOVIES/SHOWS ALREADY WATCHED AS WATCHED
+  let alreadyWatchedMovies =
+    movie && currentUser.watched.some((item) => item.id === movie.id);
+
+  let alreadyWatchedShows =
+    show && currentUser.watched.some((item) => item.id === show.id);
+
+  useEffect(() => {
+    if (alreadyWatchedMovies || alreadyWatchedShows) {
+      setWatched(true);
+    }
+  }, [alreadyWatchedMovies, alreadyWatchedShows]);
+
+  //TOGGLE WATCHED
   const toggleWatched = () => {
     setWatched(!watched);
     fetch(`/watched/${currentUser._id}`, {
@@ -103,11 +108,43 @@ export const ActionBar = ({ movie, show }) => {
     }).then(setUpdatingUser(!updatingUser));
   };
 
+  //-----------------------------FAVORITES------------------------------------
+
+  //INDICATE MOVIES/SHOWS ALREADY WATCHED AS WATCHED
+  let movieAlreadyInFavorites =
+    movie && currentUser.favorites.some((item) => item.id === movie.id);
+
+  let showAlreadyInFavorites =
+    show && currentUser.favorites.some((item) => item.id === show.id);
+
+  useEffect(() => {
+    if (movieAlreadyInFavorites || showAlreadyInFavorites) {
+      setFavorite(true);
+    }
+  }, [movieAlreadyInFavorites, showAlreadyInFavorites]);
+
+  //TOGGLE FAVORITE
+  const toggleFavorite = () => {
+    setFavorite(!favorite);
+    fetch(`/favorites/${currentUser._id}`, {
+      method: "POST",
+      body: JSON.stringify({ ...(movie || show) }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    }).then(setUpdatingUser(!updatingUser));
+  };
+
   return (
     <Wrapper>
       {/* FAVORITE */}
-      <IconBtn size={30} color="rgb(255, 215, 0)">
-        <FiStar size={30} />
+      <IconBtn size={30} color="rgb(255, 215, 0)" onClick={toggleFavorite}>
+        {favorite ? (
+          <FiStar size={30} isToggled={favorite} color="rgb(255, 215, 0)" />
+        ) : (
+          <FiStar size={30} isToggled={favorite} />
+        )}
       </IconBtn>
 
       {watched ? (

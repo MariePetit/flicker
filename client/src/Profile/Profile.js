@@ -4,6 +4,8 @@ import styled from "styled-components";
 import FlickerContext from "../Global/FlickerContext";
 import photo from "../assets/placeholder-profile-img.png";
 import { NavLink } from "react-router-dom";
+import { SmallCardAlt } from "../Global/SmallCard-Alt";
+import { FiEye, FiHeart, FiStar, FiThumbsUp } from "react-icons/fi";
 
 const moment = require("moment");
 
@@ -19,11 +21,11 @@ export const Profile = () => {
 
   return (
     <Wrapper>
-      <Section1>
+      <InfoSection>
         <Frame>
           <ProfilePhoto src={photo} />
         </Frame>
-        <SubSection>
+        <SubSection1>
           <h2>
             {currentUser.firstName} {currentUser.lastName}
           </h2>
@@ -46,22 +48,51 @@ export const Profile = () => {
               </LinkedUserDetails>
             )}
           </LinkedSection>
-        </SubSection>
-      </Section1>
-      <Section2>
-        <UserInfo>Favorites</UserInfo>
+        </SubSection1>
+      </InfoSection>
+
+      <DetailsSection>
         <SubDiv>
-          <UserInfo>Last movie watched: </UserInfo>
-          {lastMovieWatched ? (
-            <div>{lastMovieWatched.title}</div>
-          ) : (
-            <div>No movies watched yet.</div>
-          )}
+          <UserInfo>
+            <FiStar size={25} color="rgb(255, 215, 0)" />
+            My Favorites
+          </UserInfo>
+
+          <CardsSection>
+            {currentUser.favorites.map((favorite) => {
+              return <SmallCardAlt item={favorite} />;
+            })}
+          </CardsSection>
         </SubDiv>
 
-        <UserInfo>Shows currently watching</UserInfo>
-        <UserInfo>See watchlists</UserInfo>
-      </Section2>
+        <SubDiv>
+          <UserInfo>
+            <FiEye size={25} color="rgb(30, 144, 255)" /> Last watched:
+          </UserInfo>
+
+          <CardsSection>
+            {lastMovieWatched ? (
+              <SmallCardAlt item={lastMovieWatched} />
+            ) : (
+              <div>No movies watched yet.</div>
+            )}
+          </CardsSection>
+        </SubDiv>
+
+        {/* <SubDiv>
+          <UserInfo>
+            <FiHeart size={25} color="rgb(224, 36, 94)" />
+            See your watchlists
+          </UserInfo>
+        </SubDiv> */}
+
+        <SubDiv>
+          <UserInfo>
+            <FiThumbsUp size={25} color="rgb(94, 198, 65)" />
+            Most Recently Liked
+          </UserInfo>
+        </SubDiv>
+      </DetailsSection>
     </Wrapper>
   );
 };
@@ -73,7 +104,7 @@ const Wrapper = styled.div`
   margin: 150px 100px 0 100px;
 `;
 
-const Section1 = styled.div`
+const InfoSection = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -81,6 +112,15 @@ const Section1 = styled.div`
   width: 100%;
   border: 1px solid var(--secondary-user-color);
   padding: 20px;
+`;
+
+const DetailsSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  padding: 20px;
+  width: 100%;
+  border: 1px solid var(--secondary-user-color);
 `;
 
 const Frame = styled.div`
@@ -98,7 +138,7 @@ const ProfilePhoto = styled.img`
   margin-top: 10px;
 `;
 
-const SubSection = styled.div`
+const SubSection1 = styled.div`
   text-align: center;
 
   h2 {
@@ -111,15 +151,6 @@ const SubSection = styled.div`
     font-style: italic;
     margin-bottom: 15px;
   }
-`;
-
-const Section2 = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: baseline;
-  padding: 20px;
-  width: 100%;
-  border: 1px solid var(--secondary-user-color);
 `;
 
 const LinkedSection = styled.div`
@@ -137,8 +168,23 @@ const LinkedUserDetails = styled.div`
 
 const SubDiv = styled.div`
   display: flex;
+  flex-direction: column;
+
+  h3 {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    font-size: 22px;
+
+    svg {
+      margin-right: 10px;
+    }
+  }
 `;
 
-const UserInfo = styled.div`
-  margin-right: 10px;
+const CardsSection = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
+
+const UserInfo = styled.h3``;
