@@ -18,6 +18,7 @@ const {
   addToFavorites,
   addToLiked,
   addToDisliked,
+  linkUser,
 } = require("./handlers");
 
 const PORT = 8000;
@@ -49,7 +50,7 @@ app.get("/show-genres", getShowGenres);
 app.post("/create-account", createUser);
 app.post("/log-user", logUser);
 app.get("/user/:id", findUser);
-app.post("/link-user/:id", findUser);
+app.post("/link-user/:id", linkUser);
 app.get("/shows", getTvShows);
 app.post("/shows/:id", getTvShowDetails);
 app.post("/watchlist/:id", addToPersonalWatchlist);

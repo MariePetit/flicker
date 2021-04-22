@@ -5,26 +5,39 @@ import FlickerContext from "../Global/FlickerContext";
 import photo from "../assets/placeholder-profile-img.png";
 import logo from "../assets/flicker-logo.png";
 import { NavLink } from "react-router-dom";
+import { FiEye, FiStar, FiThumbsUp } from "react-icons/fi";
+import { SmallCardAlt } from "../Global/SmallCard-Alt";
 
 const moment = require("moment");
 
 export const FlickerPartnerProfile = () => {
   const { currentUser, linkedUser } = useContext(FlickerContext);
   const [lastMovieWatched, setLastMovieWatched] = useState(null);
+  const [lastLiked, setLastLiked] = useState(null);
 
+  console.log(linkedUser);
   useEffect(() => {
     if (linkedUser && linkedUser.watched.length > 0) {
       setLastMovieWatched(linkedUser.watched[linkedUser.watched.length - 1]);
     }
   }, [linkedUser]);
 
+  useEffect(() => {
+    if (linkedUser && linkedUser.liked.length > 0) {
+      setLastLiked(
+        linkedUser.liked.slice((Math.max(linkedUser.liked.length) - 5, 0))
+      );
+    }
+  }, [linkedUser]);
+
   return linkedUser ? (
     <Wrapper>
-      <Section1>
+      <InfoSection>
         <Frame>
           <ProfilePhoto src={photo} />
         </Frame>
-        <SubSection>
+
+        <SubSection1>
           <h2>
             {linkedUser.firstName} {linkedUser.lastName}
           </h2>
@@ -37,21 +50,53 @@ export const FlickerPartnerProfile = () => {
               </NavLink>
             </LinkedUserDetails>
           </LinkedSection>
-        </SubSection>
-      </Section1>
-      <Section2>
-        <UserInfo>Favorites</UserInfo>
+        </SubSection1>
+      </InfoSection>
+
+      <DetailsSection>
         <SubDiv>
-          <UserInfo>Last movie watched: </UserInfo>
+          <UserInfo>
+            <FiStar size={25} color="rgb(255, 215, 0)" />
+            Their Favorites
+          </UserInfo>
+          <CardsSection>
+            {linkedUser.favorites.length > 0 ? (
+              linkedUser.favorites.map((favorite) => {
+                return <SmallCardAlt item={favorite} />;
+              })
+            ) : (
+              <Text>No favorites yet.</Text>
+            )}
+          </CardsSection>
+        </SubDiv>
+
+        <SubDiv>
+          <UserInfo>
+            <FiEye size={25} color="rgb(30, 144, 255)" /> Last watched:{" "}
+          </UserInfo>
           {lastMovieWatched ? (
-            <div>{lastMovieWatched.title}</div>
+            <SmallCardAlt item={lastMovieWatched} />
           ) : (
-            <div>No movies watched yet.</div>
+            <Text>No movies watched yet.</Text>
           )}
         </SubDiv>
-        <UserInfo>Shows currently watching</UserInfo>
-        <UserInfo>See watchlists</UserInfo>
-      </Section2>
+
+        <SubDiv>
+          <UserInfo>
+            <FiThumbsUp size={25} color="rgb(94, 198, 65)" />
+            Most Recently Liked
+          </UserInfo>
+          <CardsSection>
+            {lastLiked ? (
+              lastLiked.map((item) => {
+                return <SmallCardAlt item={item} />;
+              })
+            ) : (
+              <Text>No movies liked yet.</Text>
+            )}
+          </CardsSection>
+        </SubDiv>
+      </DetailsSection>
     </Wrapper>
   ) : (
     <Default>
@@ -88,7 +133,7 @@ const Wrapper = styled.div`
   margin: 150px 100px 0 100px;
 `;
 
-const Section1 = styled.div`
+const InfoSection = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -96,6 +141,15 @@ const Section1 = styled.div`
   width: 100%;
   border: 1px solid var(--secondary-other-color);
   padding: 20px;
+`;
+
+const DetailsSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  padding: 20px;
+  width: 100%;
+  border: 1px solid var(--secondary-other-color);
 `;
 
 const Frame = styled.div`
@@ -113,7 +167,7 @@ const ProfilePhoto = styled.img`
   margin-top: 10px;
 `;
 
-const SubSection = styled.div`
+const SubSection1 = styled.div`
   text-align: center;
 
   h2 {
@@ -126,15 +180,6 @@ const SubSection = styled.div`
     font-style: italic;
     margin-bottom: 15px;
   }
-`;
-
-const Section2 = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: baseline;
-  padding: 20px;
-  width: 100%;
-  border: 1px solid var(--secondary-other-color);
 `;
 
 const LinkedSection = styled.div`
@@ -150,10 +195,33 @@ const LinkedUserDetails = styled.div`
   margin-left: 10px;
 `;
 
-const UserInfo = styled.div`
-  margin-right: 10px;
-`;
-
 const SubDiv = styled.div`
   display: flex;
+  flex-direction: column;
+
+  h3 {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    font-size: 22px;
+
+    svg {
+      margin-right: 10px;
+    }
+  }
+`;
+
+const CardsSection = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const UserInfo = styled.h3`
+  margin: 10px 0;
+`;
+
+const Text = styled.div`
+  margin-left: 50px;
+  font-weight: normal;
+  opacity: 0.5;
 `;
