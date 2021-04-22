@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 
 import styled from "styled-components";
 import FlickerContext from "../Global/FlickerContext";
-import photo from "../assets/placeholder-profile-img.png";
+import photo from "../assets/placeholder-current-user.jpg";
+import currentUserBg from "../assets/current-user-bg.jpg";
 import { NavLink } from "react-router-dom";
 import { SmallCardAlt } from "../Global/SmallCard-Alt";
 import { FiEye, FiStar, FiThumbsUp } from "react-icons/fi";
@@ -31,7 +32,13 @@ export const Profile = () => {
   console.log(linkedUser);
   return (
     <Wrapper>
-      <InfoSection>
+      <InfoSection
+        style={{
+          backgroundImage: `url(${currentUserBg})`,
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+        }}
+      >
         <Frame>
           <ProfilePhoto src={photo} />
         </Frame>
@@ -39,7 +46,9 @@ export const Profile = () => {
           <h2>
             {currentUser.firstName} {currentUser.lastName}
           </h2>
-          <p>Member since {moment(currentUser.joinedDate).format("YYYY")}</p>
+          <p>
+            Member since {moment(currentUser.joinedDate).format("MMMM YYYY")}
+          </p>
           <LinkedSection>
             {linkedUser ? (
               <>
@@ -140,7 +149,7 @@ const DetailsSection = styled.div`
 `;
 
 const Frame = styled.div`
-  border: 2px solid var(--secondary-user-color);
+  border: 4px solid var(--secondary-user-color);
   height: 200px;
   width: 200px;
   border-radius: 50%;
@@ -150,8 +159,6 @@ const Frame = styled.div`
 
 const ProfilePhoto = styled.img`
   max-width: 100%;
-  max-height: 100%;
-  margin-top: 10px;
 `;
 
 const SubSection1 = styled.div`
@@ -201,6 +208,7 @@ const SubDiv = styled.div`
 const CardsSection = styled.div`
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 `;
 
 const UserInfo = styled.h3`

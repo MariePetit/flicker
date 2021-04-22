@@ -18,7 +18,6 @@ export default createGlobalStyle`
 } 
 html, body {
     max-width: 100vw;
-
     background-color: #232323;
     color: white;
     font-weight: bold;

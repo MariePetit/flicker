@@ -4,18 +4,22 @@ import styled from "styled-components";
 
 import { FlickerContext } from "../Global/FlickerContext";
 import { SmallCard } from "../Global/SmallCard";
+import { MovieGenres } from "./MovieGenres";
 
 export const PopularMovies = () => {
   const { popularMovies } = useContext(FlickerContext);
 
   return popularMovies ? (
-    <Wrapper>
-      <div>
-        {popularMovies.map((movie) => {
-          return <SmallCard movie={movie} />;
-        })}
-      </div>
-    </Wrapper>
+    <>
+      <MovieGenres />
+      <Wrapper>
+        <div>
+          {popularMovies.map((movie) => {
+            return <SmallCard movie={movie} />;
+          })}
+        </div>
+      </Wrapper>
+    </>
   ) : (
     <div>Loading...</div>
   );
