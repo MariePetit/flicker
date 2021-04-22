@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import FlickerContext from "../Global/FlickerContext";
 import photo from "../assets/placeholder-profile-img.png";
+import logo from "../assets/flicker-logo.png";
 import { NavLink } from "react-router-dom";
 
 const moment = require("moment");
@@ -12,12 +13,12 @@ export const FlickerPartnerProfile = () => {
   const [lastMovieWatched, setLastMovieWatched] = useState(null);
 
   useEffect(() => {
-    if (linkedUser.watched.length > 0) {
+    if (linkedUser && linkedUser.watched.length > 0) {
       setLastMovieWatched(linkedUser.watched[linkedUser.watched.length - 1]);
     }
-  }, [linkedUser.watched]);
+  }, [linkedUser]);
 
-  return (
+  return linkedUser ? (
     <Wrapper>
       <Section1>
         <Frame>
@@ -52,8 +53,33 @@ export const FlickerPartnerProfile = () => {
         <UserInfo>See watchlists</UserInfo>
       </Section2>
     </Wrapper>
+  ) : (
+    <Default>
+      <div>Find a Flicker Partner to see their profile page!</div>
+      <div>
+        <Logo src={logo} />
+      </div>
+    </Default>
   );
 };
+
+const Default = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 30px;
+  margin: 150px 100px 0 100px;
+
+  div {
+    font-size: 26px;
+  }
+`;
+
+const Logo = styled.img`
+  margin-top: 40px;
+  height: 110px;
+  width: 120px;
+`;
 
 const Wrapper = styled.div`
   display: flex;

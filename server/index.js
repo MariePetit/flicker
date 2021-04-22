@@ -7,7 +7,8 @@ const {
   createUser,
   logUser,
   findUser,
-  getGenres,
+  getMovieGenres,
+  getShowGenres,
   getTvShows,
   getMovieDetails,
   getTvShowDetails,
@@ -43,7 +44,8 @@ app.use("/", express.static(__dirname + "/"));
 //ENDPOINTS
 app.get("/popular-movies", getAllMovies);
 app.post("/movies/:id", getMovieDetails);
-app.get("/genres", getGenres);
+app.get("/movie-genres", getMovieGenres);
+app.get("/show-genres", getShowGenres);
 app.post("/create-account", createUser);
 app.post("/log-user", logUser);
 app.get("/user/:id", findUser);
