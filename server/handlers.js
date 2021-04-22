@@ -237,8 +237,23 @@ const getAllMovies = async (req, res) => {
 };
 
 //-----------------------------GET MOVIE GENRES------------------------------------
-const getGenres = async (req, res) => {
+const getMovieGenres = async (req, res) => {
   const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-US`;
+  try {
+    const genres = await fetch(url).then((response) => {
+      response.json().then((data) => {
+        res.status(201).json({ status: 201, data: data.genres });
+      });
+    });
+    return genres;
+  } catch (err) {
+    console.log("Error!");
+  }
+};
+
+//-----------------------------GET SHOW GENRES------------------------------------
+const getShowGenres = async (req, res) => {
+  const url = `https://api.themoviedb.org/3/genre/tv/list?api_key=${API_KEY}&language=en-US`;
   try {
     const genres = await fetch(url).then((response) => {
       response.json().then((data) => {
@@ -788,7 +803,8 @@ module.exports = {
   findUser,
   linkUser,
   getAllMovies,
-  getGenres,
+  getMovieGenres,
+  getShowGenres,
   getTvShows,
   getMovieDetails,
   getTvShowDetails,

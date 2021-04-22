@@ -1,8 +1,6 @@
 import React from "react";
-import { FiX } from "react-icons/fi";
 
 import styled from "styled-components";
-import { IconBtn } from "./IconBtn";
 
 export const SmallCardAlt = ({ item }) => {
   return (

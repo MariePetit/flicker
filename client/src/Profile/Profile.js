@@ -5,7 +5,7 @@ import FlickerContext from "../Global/FlickerContext";
 import photo from "../assets/placeholder-profile-img.png";
 import { NavLink } from "react-router-dom";
 import { SmallCardAlt } from "../Global/SmallCard-Alt";
-import { FiEye, FiHeart, FiStar, FiThumbsUp } from "react-icons/fi";
+import { FiEye, FiStar, FiThumbsUp } from "react-icons/fi";
 
 const moment = require("moment");
 
@@ -93,13 +93,6 @@ export const Profile = () => {
             )}
           </CardsSection>
         </SubDiv>
-
-        {/* <SubDiv>
-          <UserInfo>
-            <FiHeart size={25} color="rgb(224, 36, 94)" />
-            See your watchlists
-          </UserInfo>
-        </SubDiv> */}
 
         <SubDiv>
           <UserInfo>

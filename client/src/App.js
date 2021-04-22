@@ -5,17 +5,19 @@ import { NavBar } from "./Global/NavBar";
 import { CreateAccount } from "./Homepage/CreateAccount";
 import { Homepage } from "./Homepage/Homepage";
 import { LogIn } from "./Homepage/LogIn";
-import { Movies } from "./Movies/Movies";
 import styled from "styled-components";
-import { Genres } from "./Movies/Genres";
-import { SpecificGenre } from "./Movies/SpecificGenre";
+import { MovieGenres } from "./Movies/MovieGenres";
+import { SpecificGenre, SpecificMovieGenre } from "./Movies/SpecificMovieGenre";
 import { TvShows } from "./Shows/TvShows";
+import { ShowGenres } from "./Shows/ShowGenres";
 import { MovieDetails } from "./Movies/MovieDetails";
 import { WatchlistsPage } from "./Watchlists/WatchlistsPage";
 import { ShowDetails } from "./Shows/ShowDetails";
 import { Profile } from "./Profile/Profile";
 import { FlickerPartnerProfile } from "./Profile/FlickerPartnerProfile";
 import { SearchUser } from "./Profile/SearchUser";
+import { PopularMovies } from "./Movies/PopularMovies";
+import { SpecificShowGenre } from "./Shows/SpecificShowGenre";
 
 function App() {
   return (
@@ -34,19 +36,23 @@ function App() {
             <LogIn />
           </Route>
           <Route exact path="/movies">
-            <Movies />
+            <MovieGenres />
+            <PopularMovies />
           </Route>
           <Route exact path="/shows">
+            <ShowGenres />
             <TvShows />
+          </Route>
+          <Route exact path="/show-genres/:name">
+            <ShowGenres />
+            <SpecificShowGenre />
           </Route>
           <Route exact path="/watchlists">
             <WatchlistsPage />
           </Route>
-          <Route exact path="/genres">
-            <Genres />
-          </Route>
-          <Route exact path="/genres/:name">
-            <SpecificGenre />
+          <Route exact path="/movie-genres/:name">
+            <MovieGenres />
+            <SpecificMovieGenre />
           </Route>
           <Route exact path="/movies/:id">
             <MovieDetails />

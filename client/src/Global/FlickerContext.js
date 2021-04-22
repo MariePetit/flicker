@@ -5,7 +5,8 @@ export const FlickerProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [linkedUser, setLinkedUser] = useState(null);
   const [popularMovies, setPopularMovies] = useState(null);
-  const [genres, setGenres] = useState(null);
+  const [movieGenres, setMovieGenres] = useState(null);
+  const [showGenres, setShowGenres] = useState(null);
   const [shows, setShows] = useState(null);
   const [updatingUser, setUpdatingUser] = useState(false);
 
@@ -30,11 +31,21 @@ export const FlickerProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    fetch("/genres")
+    fetch("/movie-genres")
       .then((res) => res.json())
       .then((json) => {
         if (json.status === 201) {
-          setGenres(json.data);
+          setMovieGenres(json.data);
+        }
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("/show-genres")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.status === 201) {
+          setShowGenres(json.data);
         }
       });
   }, []);
@@ -57,7 +68,8 @@ export const FlickerProvider = ({ children }) => {
         updatingUser,
         setUpdatingUser,
         popularMovies,
-        genres,
+        movieGenres,
+        showGenres,
         shows,
         linkedUser,
         setLinkedUser,

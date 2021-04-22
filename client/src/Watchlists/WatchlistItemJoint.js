@@ -3,7 +3,7 @@ import { FiX } from "react-icons/fi";
 import { useDispatch } from "react-redux";
 
 import styled from "styled-components";
-import { removeItem, removeItemJoint } from "../actions";
+import { removeItemJoint } from "../actions";
 import FlickerContext from "../Global/FlickerContext";
 import { IconBtn } from "../Global/IconBtn";
 

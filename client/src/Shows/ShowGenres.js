@@ -4,15 +4,15 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { FlickerContext } from "../Global/FlickerContext";
 
-export const Genres = () => {
-  const { genres } = useContext(FlickerContext);
+export const ShowGenres = () => {
+  const { showGenres } = useContext(FlickerContext);
 
-  return genres ? (
+  return showGenres ? (
     <Wrapper>
       <ItemList>
-        {genres.map((genre) => {
+        {showGenres.map((genre) => {
           return (
-            <Item to={`/genres/${genre.name.toLowerCase()}`} genre={genre}>
+            <Item to={`/show-genres/${genre.name.toLowerCase()}`} genre={genre}>
               {genre.name}
             </Item>
           );
@@ -28,6 +28,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin: auto;
 `;
 
 const ItemList = styled.div`
@@ -42,12 +43,17 @@ const ItemList = styled.div`
 const Item = styled(NavLink)`
   border: 1px solid var(--secondary-user-color);
   border-radius: 8px;
-  margin: 20px;
-  padding: 60px 80px;
-  font-size: 24px;
+  margin: 10px;
+  padding: 15px 20px;
+  font-size: 20px;
   font-weight: normal;
+  transition: 0.5s ease;
 
-  &:hover {
+  &:hover,
+  :focus {
     cursor: pointer;
+    background-color: var(--third-user-color);
+    color: black;
+    font-weight: bold;
   }
 `;

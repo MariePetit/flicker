@@ -28,7 +28,6 @@ export const NavBar = () => {
         {currentUser && (
           <NavSection>
             <Link to="/movies">Movies</Link>
-            <Link to="/genres">Movie Genres</Link>
             <Link to="/shows">Shows</Link>
             <Link to="/watchlists">Watchlists</Link>
           </NavSection>
