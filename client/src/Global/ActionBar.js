@@ -273,4 +273,5 @@ const Wrapper = styled.div`
   padding: 10px;
   width: 100%;
   z-index: 1;
+  transition: 1s ease-in-out;
 `;

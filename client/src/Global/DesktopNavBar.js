@@ -90,6 +90,12 @@ const Link = styled(NavLink)`
   font-size: 20px;
   color: white;
   margin: 0 30px;
+  transition: 0.3s ease-in-out;
+
+  &:hover {
+    cursor: pointer;
+    color: var(--third-user-color);
+  }
 `;
 
 const Button = styled.button`
@@ -112,9 +118,6 @@ const Button = styled.button`
 
   &:hover {
     cursor: pointer;
-  }
-
-  &:focus {
   }
 
   &:active {

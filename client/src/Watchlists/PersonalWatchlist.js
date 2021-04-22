@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 import styled from "styled-components";
-import { WatchlistItemPersonal } from "./WatchlistItemPersonal";
 import FlickerContext from "../Global/FlickerContext";
-import { useSelector } from "react-redux";
+
 import { getPersonalWatchlist } from "../reducers";
+import { SmallCardPersonal } from "./SmallCardPersonal";
 
 export const PersonalWatchlist = () => {
   const { currentUser } = useContext(FlickerContext);
   const [personalWatchlist, setPersonalWatchlist] = useState([]);
-
   const watchlistItems = useSelector(getPersonalWatchlist);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export const PersonalWatchlist = () => {
       <WatchlistSection>
         {watchlistItems.length > 0 &&
           watchlistItems.map((item) => {
-            return <WatchlistItemPersonal item={item} />;
+            return <SmallCardPersonal item={item} />;
           })}
         {(watchlistItems === 0 || personalWatchlist.length === 0) && (
           <Default>Your watchlist is empty!</Default>
@@ -41,15 +41,15 @@ const Wrapper = styled.div`
   flex-direction: column;
 
   h3 {
-    margin: 10px 0;
-    font-size: 20px;
+    margin: 10px 15px 0 15px;
+    font-size: 30px;
     padding: 10px 0;
   }
 `;
 
 const WatchlistSection = styled.div`
-  border: 1px solid var(--primary-user-color);
-  border-radius: 12px;
+  display: flex;
+  flex-wrap: wrap;
 `;
 
 const Default = styled.div`

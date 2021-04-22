@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { useParams } from "react-router";
+
 import styled from "styled-components";
+
 import FlickerContext from "../Global/FlickerContext";
 import { SmallCard } from "../Global/SmallCard";
 
 export const SpecificMovieGenre = () => {
   const genre = useParams();
-  const { popularMovies, movieGenres, shows, showGenres } = useContext(
-    FlickerContext
-  );
+  const { popularMovies, movieGenres } = useContext(FlickerContext);
 
   let matchedMovieGenre = movieGenres.filter((singleGenre) => {
     return singleGenre.name.toLowerCase() === genre.name;
