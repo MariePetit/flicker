@@ -12,6 +12,9 @@ export const NavBar = () => {
   const onClick = () => {
     if (currentUser) {
       setCurrentUser(null);
+      localStorage.setItem("current-user-email", "");
+      localStorage.setItem("current-user-id", "");
+      localStorage.setItem("logged-in", "false");
       history.push("/");
     } else {
       history.push("/log-in");

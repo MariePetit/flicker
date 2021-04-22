@@ -28,8 +28,7 @@ export const Profile = () => {
     }
   }, [currentUser.liked]);
 
-  console.log(currentUser.liked);
-  console.log(lastLiked);
+  console.log(linkedUser);
   return (
     <Wrapper>
       <InfoSection>
@@ -75,7 +74,7 @@ export const Profile = () => {
                 return <SmallCardAlt item={favorite} />;
               })
             ) : (
-              <div>No favorites yet.</div>
+              <Text>No favorites yet.</Text>
             )}
           </CardsSection>
         </SubDiv>
@@ -89,7 +88,7 @@ export const Profile = () => {
             {lastMovieWatched ? (
               <SmallCardAlt item={lastMovieWatched} />
             ) : (
-              <div>No movies watched yet.</div>
+              <Text>No movies watched yet.</Text>
             )}
           </CardsSection>
         </SubDiv>
@@ -105,7 +104,7 @@ export const Profile = () => {
                 return <SmallCardAlt item={item} />;
               })
             ) : (
-              <div>No movies liked yet.</div>
+              <Text>No movies liked yet.</Text>
             )}
           </CardsSection>
         </SubDiv>
@@ -206,4 +205,10 @@ const CardsSection = styled.div`
 
 const UserInfo = styled.h3`
   margin: 10px 0;
+`;
+
+const Text = styled.div`
+  margin-left: 50px;
+  font-weight: normal;
+  opacity: 0.5;
 `;

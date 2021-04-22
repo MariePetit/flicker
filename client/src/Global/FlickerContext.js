@@ -14,7 +14,9 @@ export const FlickerProvider = ({ children }) => {
     if (localStorage.getItem("logged-in") === "true") {
       fetch(`/user/${localStorage.getItem("current-user-id")}`).then((res) => {
         res.json().then((data) => {
+          console.log(data);
           setCurrentUser(data.data);
+          setLinkedUser(data.data.linkedUser[0]);
         });
       });
     }
