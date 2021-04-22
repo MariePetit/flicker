@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import MediaQuery from "react-responsive";
 
 import styled, { keyframes } from "styled-components";
 import FlickerContext from "../Global/FlickerContext";
@@ -20,58 +21,123 @@ export const Homepage = () => {
   }, [popularMovies, shows]);
 
   return (
-    <Wrapper>
-      {currentUser && (
-        <>
-          <div>
-            <LogInText1>Oh! Hello there, {currentUser.firstName}!</LogInText1>
-            <LogInText2>What would you like to browse today?</LogInText2>
-          </div>
-          {randomMoviePoster && randomShowPoster ? (
-            <CardSection>
-              <Card1
-                to="/movies"
-                style={{
-                  backgroundImage: `url(http://image.tmdb.org/t/p/w500${randomMoviePoster.poster_path})`,
-                  backgroundPosition: "center",
-                  backgroundSize: "cover",
-                }}
-              >
-                <CardName>Movies</CardName>
-              </Card1>
-              <Card2
-                to="/shows"
-                style={{
-                  backgroundImage: `url(http://image.tmdb.org/t/p/w500${randomShowPoster.poster_path})`,
-                  backgroundPosition: "center",
-                  backgroundSize: "cover",
-                }}
-              >
-                <CardName>Shows</CardName>
-              </Card2>
-              <Card3
-                to="/watchlists"
-                style={{
-                  backgroundImage: `url(${genresBackground})`,
-                  backgroundPosition: "center",
-                  backgroundSize: "cover",
-                }}
-              >
-                <CardName>Watchlists</CardName>
-              </Card3>
-            </CardSection>
-          ) : (
-            <div>Loading...</div>
+    <>
+      {/* ----------------------- MAX WIDTH = 1048 ------------------------------*/}
+      <MediaQuery minWidth={1049}>
+        <Wrapper>
+          {currentUser && (
+            <>
+              <div>
+                <LogInText1>
+                  Oh! Hello there, {currentUser.firstName}!
+                </LogInText1>
+                <LogInText2>What would you like to browse today?</LogInText2>
+              </div>
+              {randomMoviePoster && randomShowPoster ? (
+                <CardSection>
+                  <Card1
+                    to="/movies"
+                    style={{
+                      backgroundImage: `url(http://image.tmdb.org/t/p/w500${randomMoviePoster.poster_path})`,
+                      backgroundPosition: "center",
+                      backgroundSize: "cover",
+                    }}
+                  >
+                    <CardName>Movies</CardName>
+                  </Card1>
+                  <Card2
+                    to="/shows"
+                    style={{
+                      backgroundImage: `url(http://image.tmdb.org/t/p/w500${randomShowPoster.poster_path})`,
+                      backgroundPosition: "center",
+                      backgroundSize: "cover",
+                    }}
+                  >
+                    <CardName>Shows</CardName>
+                  </Card2>
+                  <Card3
+                    to="/watchlists"
+                    style={{
+                      backgroundImage: `url(${genresBackground})`,
+                      backgroundPosition: "center",
+                      backgroundSize: "cover",
+                    }}
+                  >
+                    <CardName>Watchlists</CardName>
+                  </Card3>
+                </CardSection>
+              ) : (
+                <div>Loading...</div>
+              )}
+            </>
           )}
-        </>
-      )}
-      {!currentUser && (
-        <Section>
-          <Link to="/log-in">Sign in</Link>
-          <Link to="/create-account">Create an account</Link>
-        </Section>
-      )}
-    </Wrapper>
+          {!currentUser && (
+            <Section>
+              <Link to="/log-in">Sign in</Link>
+              <Link to="/create-account">Create an account</Link>
+            </Section>
+          )}
+        </Wrapper>
+      </MediaQuery>
+
+      {/* ------------------ MAX WIDTH = 1048 ----------------------------- */}
+      <MediaQuery maxWidth={1048}>
+        <Wrapper>
+          {currentUser && (
+            <>
+              <div>
+                <LogInText1>
+                  Oh! Hello there, {currentUser.firstName}!
+                </LogInText1>
+                <LogInText2>What would you like to browse today?</LogInText2>
+              </div>
+              {randomMoviePoster && randomShowPoster ? (
+                <MobileCardSection>
+                  <Card1
+                    to="/movies"
+                    style={{
+                      backgroundImage: `url(http://image.tmdb.org/t/p/w500${randomMoviePoster.poster_path})`,
+                      backgroundPosition: "center",
+                      backgroundSize: "cover",
+                    }}
+                  >
+                    <CardName>Movies</CardName>
+                  </Card1>
+                  <Card2
+                    to="/shows"
+                    style={{
+                      backgroundImage: `url(http://image.tmdb.org/t/p/w500${randomShowPoster.poster_path})`,
+                      backgroundPosition: "center",
+                      backgroundSize: "cover",
+                    }}
+                  >
+                    <CardName>Shows</CardName>
+                  </Card2>
+                  <Card3
+                    to="/watchlists"
+                    style={{
+                      backgroundImage: `url(${genresBackground})`,
+                      backgroundPosition: "center",
+                      backgroundSize: "cover",
+                    }}
+                  >
+                    <CardName>Watchlists</CardName>
+                  </Card3>
+                </MobileCardSection>
+              ) : (
+                <div>Loading...</div>
+              )}
+            </>
+          )}
+          {!currentUser && (
+            <Section>
+              <Link to="/log-in">Sign in</Link>
+              <Link to="/create-account">Create an account</Link>
+            </Section>
+          )}
+        </Wrapper>
+      </MediaQuery>
+    </>
   );
 };
 
@@ -143,12 +209,20 @@ const CardSection = styled.div`
   justify-content: center;
 `;
 
+const MobileCardSection = styled.div`
+  margin-top: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
 const Card1 = styled(NavLink)`
   border: 2px solid var(--primary-user-color);
   border-radius: 6px;
-  width: 300px;
-  height: 450px;
-  margin: 0 20px;
+  width: 360px;
+  height: 540px;
+  margin: 20px 0;
   animation-name: ${fadeIn};
   animation-delay: 2.3s;
   animation-duration: 1s;
@@ -160,7 +234,6 @@ const Card1 = styled(NavLink)`
       display: flex;
       align-items: center;
       justify-content: center;
-
       opacity: 100;
       background-color: rgb(0, 0, 0, 0.85);
       height: 100%;
@@ -172,9 +245,9 @@ const Card1 = styled(NavLink)`
 const Card2 = styled(NavLink)`
   border: 2px solid var(--primary-user-color);
   border-radius: 6px;
-  width: 300px;
-  height: 450px;
-  margin: 0 20px;
+  width: 360px;
+  height: 540px;
+  margin: 20px;
   animation-name: ${fadeIn};
   animation-delay: 2.5s;
   animation-duration: 1s;
@@ -186,7 +259,6 @@ const Card2 = styled(NavLink)`
       display: flex;
       align-items: center;
       justify-content: center;
-
       opacity: 100;
       background-color: rgb(0, 0, 0, 0.85);
       height: 100%;
@@ -198,9 +270,9 @@ const Card2 = styled(NavLink)`
 const Card3 = styled(NavLink)`
   border: 2px solid var(--primary-user-color);
   border-radius: 6px;
-  width: 300px;
-  height: 450px;
-  margin: 0 20px;
+  width: 360px;
+  height: 540px;
+  margin: 20px 0;
   animation-name: ${fadeIn};
   animation-delay: 2.7s;
   animation-duration: 1s;

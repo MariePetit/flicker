@@ -5,7 +5,7 @@ import styled from "styled-components";
 import FlickerContext from "./FlickerContext";
 import logo from "../assets/flicker-logo.png";
 
-export const NavBar = () => {
+const DesktopNavBar = () => {
   const { currentUser, setCurrentUser } = useContext(FlickerContext);
   const history = useHistory();
 
@@ -39,8 +39,7 @@ export const NavBar = () => {
           {currentUser && (
             <div>
               <h2>
-                Hello there,{" "}
-                <NavLink to="/profile">{currentUser.firstName}</NavLink>!
+                Hi, <NavLink to="/profile">{currentUser.firstName}</NavLink>!
               </h2>
             </div>
           )}
@@ -122,3 +121,5 @@ const Button = styled.button`
     background: rgba(239, 202, 8, 1);
   }
 `;
+
+export default DesktopNavBar;

@@ -1,7 +1,6 @@
 import GlobalStyles from "./Global/GlobalStyles";
 
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import { NavBar } from "./Global/NavBar";
 import { CreateAccount } from "./Homepage/CreateAccount";
 import { Homepage } from "./Homepage/Homepage";
 import { LogIn } from "./Homepage/LogIn";
@@ -18,12 +17,13 @@ import { FlickerPartnerProfile } from "./Profile/FlickerPartnerProfile";
 import { SearchUser } from "./Profile/SearchUser";
 import { PopularMovies } from "./Movies/PopularMovies";
 import { SpecificShowGenre } from "./Shows/SpecificShowGenre";
+import { Header } from "./Global/Header";
 
 function App() {
   return (
     <BrowserRouter>
       <GlobalStyles />
-      <NavBar />
+      <Header />
       <Wrapper>
         <Switch>
           <Route exact path="/">
@@ -36,7 +36,6 @@ function App() {
             <LogIn />
           </Route>
           <Route exact path="/movies">
-            <MovieGenres />
             <PopularMovies />
           </Route>
           <Route exact path="/shows">

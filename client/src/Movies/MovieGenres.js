@@ -8,20 +8,23 @@ export const MovieGenres = () => {
   const { movieGenres } = useContext(FlickerContext);
 
   return movieGenres ? (
-    <Wrapper>
-      <ItemList>
-        {movieGenres.map((genre) => {
-          return (
-            <Item
-              to={`/movie-genres/${genre.name.toLowerCase()}`}
-              genre={genre}
-            >
-              {genre.name}
-            </Item>
-          );
-        })}
-      </ItemList>
-    </Wrapper>
+    <>
+      <Wrapper>
+        <ItemList>
+          <Item to={`/movies`}>All</Item>
+          {movieGenres.map((genre) => {
+            return (
+              <Item
+                to={`/movie-genres/${genre.name.toLowerCase()}`}
+                genre={genre}
+              >
+                {genre.name}
+              </Item>
+            );
+          })}
+        </ItemList>
+      </Wrapper>
+    </>
   ) : (
     <div>Loading...</div>
   );

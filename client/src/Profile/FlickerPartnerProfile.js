@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 
 import styled from "styled-components";
 import FlickerContext from "../Global/FlickerContext";
-import photo from "../assets/placeholder-profile-img.png";
+import photo from "../assets/placeholder-linked-user.jpg";
 import logo from "../assets/flicker-logo.png";
+import linkedUserBg from "../assets/linked-user-bg.jpg";
 import { NavLink } from "react-router-dom";
 import { FiEye, FiStar, FiThumbsUp } from "react-icons/fi";
 import { SmallCardAlt } from "../Global/SmallCard-Alt";
@@ -32,7 +33,13 @@ export const FlickerPartnerProfile = () => {
 
   return linkedUser ? (
     <Wrapper>
-      <InfoSection>
+      <InfoSection
+        style={{
+          backgroundImage: `url(${linkedUserBg})`,
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+        }}
+      >
         <Frame>
           <ProfilePhoto src={photo} />
         </Frame>
@@ -41,7 +48,9 @@ export const FlickerPartnerProfile = () => {
           <h2>
             {linkedUser.firstName} {linkedUser.lastName}
           </h2>
-          <p>Member since {moment(linkedUser.joinedDate).format("YYYY")}</p>
+          <p>
+            Member since {moment(linkedUser.joinedDate).format("MMMM YYYY")}
+          </p>
           <LinkedSection>
             <div>Flickering with:</div>
             <LinkedUserDetails>
@@ -153,7 +162,7 @@ const DetailsSection = styled.div`
 `;
 
 const Frame = styled.div`
-  border: 2px solid var(--secondary-other-color);
+  border: 4px solid var(--third-other-color);
   height: 200px;
   width: 200px;
   border-radius: 50%;
@@ -162,9 +171,7 @@ const Frame = styled.div`
 `;
 
 const ProfilePhoto = styled.img`
-  max-width: 100%;
   max-height: 100%;
-  margin-top: 10px;
 `;
 
 const SubSection1 = styled.div`
@@ -214,6 +221,7 @@ const SubDiv = styled.div`
 const CardsSection = styled.div`
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 `;
 
 const UserInfo = styled.h3`

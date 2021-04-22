@@ -10,6 +10,7 @@ export const ShowGenres = () => {
   return showGenres ? (
     <Wrapper>
       <ItemList>
+        <Item to={`/shows`}>All</Item>
         {showGenres.map((genre) => {
           return (
             <Item to={`/show-genres/${genre.name.toLowerCase()}`} genre={genre}>
