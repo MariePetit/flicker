@@ -36,10 +36,9 @@ export const CreateAccount = () => {
         if (status === 201) {
           alert("Thank you for creating an account!");
           setCurrentUser(data.data);
-          window.localStorage.setItem(
-            "current-user",
-            JSON.stringify(currentUser)
-          );
+          localStorage.setItem("current-user-email", data.data.email);
+          localStorage.setItem("current-user-id", data.data._id);
+          localStorage.setItem("logged-in", "true");
           history.push("/");
         }
       });

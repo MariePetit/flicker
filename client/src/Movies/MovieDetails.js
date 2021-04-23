@@ -13,7 +13,6 @@ export const MovieDetails = () => {
 
   let specificMovie = useParams();
 
-  console.log(specificMovie);
   useEffect(() => {
     fetch("/movies/:id", {
       method: "POST",
@@ -43,16 +42,9 @@ export const MovieDetails = () => {
 
   useEffect(() => {
     if (cast) {
-      console.log(cast.length);
       setTopActors(cast.slice(0, 6));
     }
   }, [cast]);
-
-  useEffect(() => {
-    if (topActors) {
-      console.log(topActors);
-    }
-  }, [topActors]);
 
   return movie && cast ? (
     <>
@@ -104,7 +96,6 @@ export const MovieDetails = () => {
               <ActorsSection>
                 {topActors ? (
                   topActors.map((actor) => {
-                    console.log(actor);
                     return (
                       <ActorCard
                         style={{
@@ -174,7 +165,6 @@ export const MovieDetails = () => {
             <ActorsSection>
               {topActors ? (
                 topActors.map((actor) => {
-                  console.log(actor);
                   return (
                     <ActorCard
                       style={{

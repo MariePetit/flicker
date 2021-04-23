@@ -33,7 +33,6 @@ const MobileNavBar = () => {
         <NavSection>
           {currentUser ? (
             <UserSection>
-              <h2>Hi, {currentUser.firstName}! </h2>
               <Icon to="/profile">
                 <FiUser />
               </Icon>
@@ -63,7 +62,6 @@ const MobileNavBar = () => {
   );
 };
 
-//HEADER WRAPPER
 const Wrapper = styled.header`
   display: flex;
   flex-direction: column;
@@ -90,7 +88,6 @@ const HeaderTop = styled.div`
   padding: 0 20px;
 `;
 
-//LOGO BTN
 const HomeBtn = styled(NavLink)`
   font-size: 30px;
   color: var(--primary-user-color);
@@ -103,7 +100,7 @@ const Logo = styled.img`
   align-items: center;
 `;
 
-//USER LOG IN SECTION
+//----USER LOG-IN BTN----
 const Icon = styled(NavLink)`
   display: flex;
   align-items: center;
@@ -128,7 +125,7 @@ const UserSection = styled.div`
   }
 `;
 
-//NAVIGATION
+//-----NAVIGATION------
 const NavMenu = styled.div`
   display: flex;
   flex-direction: column;
@@ -207,7 +204,7 @@ const Button = styled.button`
   }
 `;
 
-//REUSABLE STYLED COMPONENTS
+//---REUSED STYLED COMPONENTS---
 const NavSection = styled.div`
   display: flex;
   align-content: center;

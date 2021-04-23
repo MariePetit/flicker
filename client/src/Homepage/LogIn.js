@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
+import { NavLink } from "react-router-dom";
 
 import styled from "styled-components";
 import FlickerContext from "../Global/FlickerContext";
@@ -76,6 +77,10 @@ export const LogIn = () => {
         </div>
         <Button type="submit">Confirm</Button>
       </Form>
+      <CreateAccount>
+        Don't have an account?
+        <Link to="/create-account">Sign Up!</Link>
+      </CreateAccount>
     </Wrapper>
   );
 };
@@ -85,7 +90,11 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 200px;
+  width: 310px;
+  margin: auto;
+  padding: 20px 30px;
+  border: 2px solid var(--primary-user-color);
+  border-radius: 10px;
 `;
 
 const Form = styled.form`
@@ -93,18 +102,16 @@ const Form = styled.form`
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  padding: 15px 30px;
-  border: 2px solid var(--primary-user-color);
-  border-radius: 10px;
 
   h2 {
-    margin: 20px 0;
+    margin: 0 0 10px 0;
+    font-size: 20px;
   }
 
   input {
     margin: 5px;
     padding: 5px;
-    font-size: 14px;
+    font-size: 16px;
     border-radius: 5px;
   }
 
@@ -138,5 +145,23 @@ const Button = styled.button`
 
   &:active {
     background: rgba(239, 202, 8, 1);
+  }
+`;
+
+const CreateAccount = styled.div`
+  font-size: 16px;
+  font-weight: normal;
+  font-style: italic;
+`;
+
+const Link = styled(NavLink)`
+  margin-left: 10px;
+  font-weight: bold;
+  font-style: normal;
+  color: var(--secondary-user-color);
+  transition: 0.5s ease-in-out;
+
+  &:hover {
+    color: var(--third-user-color);
   }
 `;

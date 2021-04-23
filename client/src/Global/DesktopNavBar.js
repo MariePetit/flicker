@@ -39,7 +39,9 @@ const DesktopNavBar = () => {
           {currentUser && (
             <div>
               <h2>
-                Hi, <NavLink to="/profile">{currentUser.firstName}</NavLink>!
+                Hi,{" "}
+                <ProfileLink to="/profile">{currentUser.firstName}</ProfileLink>
+                !
               </h2>
             </div>
           )}
@@ -68,6 +70,16 @@ const Wrapper = styled.header`
   border-bottom: 3px solid var(--primary-user-color);
 `;
 
+const NavSection = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+
+  h2 {
+    font-size: 18px;
+  }
+`;
+
 const Logo = styled.img`
   height: 55px;
   width: 60px;
@@ -75,12 +87,11 @@ const Logo = styled.img`
 const HomeBtn = styled(NavLink)`
   font-size: 30px;
   color: var(--primary-user-color);
-`;
+  transition: 0.3s ease-in;
 
-const NavSection = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 0 12px;
+  &:hover {
+    color: var(--third-user-color);
+  }
 `;
 
 const Link = styled(NavLink)`
@@ -94,6 +105,14 @@ const Link = styled(NavLink)`
 
   &:hover {
     cursor: pointer;
+    color: var(--third-user-color);
+  }
+`;
+
+const ProfileLink = styled(NavLink)`
+  transition: 0.3s ease-in;
+
+  &:hover {
     color: var(--third-user-color);
   }
 `;

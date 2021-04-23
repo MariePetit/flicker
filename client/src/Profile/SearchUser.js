@@ -18,7 +18,6 @@ export const SearchUser = () => {
   }, []);
 
   const handleSubmit = (ev) => {
-    console.log(formData);
     ev.preventDefault();
     fetch(`/link-user/${currentUser._id}`, {
       method: "POST",
@@ -30,8 +29,6 @@ export const SearchUser = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data.data);
-        console.log("otherUser", data.data.otherUser);
         const { status } = data;
         if (status === 202) {
           setLinkedUser(data.data.otherUser);

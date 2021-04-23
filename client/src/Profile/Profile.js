@@ -29,7 +29,6 @@ export const Profile = () => {
     }
   }, [currentUser.liked]);
 
-  console.log(linkedUser);
   return (
     <Wrapper>
       <InfoSection

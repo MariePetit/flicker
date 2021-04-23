@@ -116,7 +116,7 @@ const logUser = async (req, res) => {
   console.log("Disconnected!");
 };
 
-//-------------------FINDING USER (TO AUTHENTICATE LOCAL STORAGE & UPDATE CURRENT USER----------------
+//--------------FINDING USER (TO AUTHENTICATE LOCAL STORAGE & UPDATE CURRENT USER-------------
 const findUser = async (req, res) => {
   const { id } = req.params;
 
@@ -418,7 +418,7 @@ const addToPersonalWatchlist = async (req, res) => {
       //if already added, then remove movie
 
       if (alreadyAdded) {
-        console.log("no other user, already in personal watchlist");
+        console.log("No other user + already in personal watchlist");
         const result = await db
           .collection("users")
           .updateOne(mainUserId, removeValue);
@@ -432,7 +432,7 @@ const addToPersonalWatchlist = async (req, res) => {
 
         //if not already in personal watchlist, then add it
       } else {
-        console.log("no other user, not yet in personal watchlist");
+        console.log("No other user + Not yet in personal watchlist");
         let newValue = { $addToSet: { personalWatchlist: watchlistItem } };
         const result = await db
           .collection("users")
@@ -457,7 +457,7 @@ const addToPersonalWatchlist = async (req, res) => {
       );
       //check if movie is already in main user's personal watchlist
       if (alreadyAdded) {
-        console.log("linked user, already in personal watchlist");
+        console.log("Linked user + Already in personal watchlist");
         const result = await db
           .collection("users")
           .updateOne(mainUserId, removeValue);
@@ -472,7 +472,7 @@ const addToPersonalWatchlist = async (req, res) => {
         //if not already in watchlist, but movie is already in linked user's watchlist
       } else if (!alreadyAdded && alreadyAddedOther) {
         console.log(
-          "linked user, not in personal watchlist, in linked's watched list"
+          "Linked user + Not in personal watchlist + In linked's watched list"
         );
         let newValue = { $addToSet: { jointWatchlist: watchlistItem } };
         const addMovieToMainJointWatchlist = await db
@@ -503,7 +503,7 @@ const addToPersonalWatchlist = async (req, res) => {
 
       //if not in anyone's watchlist already
       else {
-        console.log("linked user, not in anyone's personal watchlist");
+        console.log("Linked user + Not in anyone's personal watchlist");
         let newValue = { $addToSet: { personalWatchlist: watchlistItem } };
         const result = await db
           .collection("users")
@@ -526,7 +526,7 @@ const addToPersonalWatchlist = async (req, res) => {
   }
 };
 
-//-------------------------REMOVE FROM WATCHLISTS (ON WATCHLISTS' PAGE)-------------------------------
+//-------------------REMOVE FROM WATCHLISTS (ON WATCHLISTS' PAGE)--------------------------
 const removeFromWatchlist = async (req, res) => {
   const item = req.body;
   const { id } = req.params;
@@ -545,8 +545,6 @@ const removeFromWatchlist = async (req, res) => {
 
     const result = await db.collection("users").updateOne(query, removeValue);
     assert.strictEqual(result.matchedCount, 1);
-
-    console.log("removed?");
 
     res.status(202).json({
       status: 202,
@@ -586,8 +584,6 @@ const addToWatched = async (req, res) => {
     if (alreadyAdded) {
       const result = await db.collection("users").updateOne(query, removeValue);
       assert.strictEqual(result.matchedCount, 1);
-
-      console.log("removed?");
 
       res.status(202).json({
         status: 202,
@@ -647,7 +643,6 @@ const addToFavorites = async (req, res) => {
       const result = await db.collection("users").updateOne(query, removeValue);
       assert.strictEqual(result.matchedCount, 1);
 
-      console.log("already added");
       res.status(202).json({
         status: 202,
         data: removeValue,
