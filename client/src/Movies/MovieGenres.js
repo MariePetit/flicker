@@ -47,10 +47,9 @@ const ItemList = styled.div`
 `;
 
 const Item = styled(NavLink)`
-  border: 1px solid var(--secondary-user-color);
-  border-radius: 8px;
-  margin: 10px;
-  padding: 15px 20px;
+  border-radius: 12px;
+  margin: 6px;
+  padding: 8px 15px;
   font-size: 20px;
   font-weight: normal;
   transition: 0.5s ease;
