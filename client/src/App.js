@@ -56,21 +56,21 @@ function App() {
             <ShowGenres />
             <TvShows />
           </Route>
+          <Route exact path="/watchlists">
+            <WatchlistsPage />
+          </Route>
+          <Route exact path="/about">
+            <AboutPage />
+          </Route>
+          <Route exact path="/profile/flicker-partner">
+            <FlickerPartnerProfile />
+          </Route>
           <Route exact path="/show-genres/:name">
             <ShowGenres />
             <SpecificShowGenre />
           </Route>
           <Route exact path="/shows/:id">
             <ShowDetails />
-          </Route>
-          <Route exact path="/watchlists">
-            <WatchlistsPage />
-          </Route>
-          <Route exact to="/about">
-            <AboutPage />
-          </Route>
-          <Route exact to="/flicker-partner">
-            <FlickerPartnerProfile />
           </Route>
         </Switch>
       </Wrapper>
