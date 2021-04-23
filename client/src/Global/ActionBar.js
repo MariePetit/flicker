@@ -68,7 +68,6 @@ export const ActionBar = ({ movie, show }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         const { status, msg } = data;
         if (status === 202) {
           if (msg === "Added to personal watchlist!") {

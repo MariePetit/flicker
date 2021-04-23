@@ -42,16 +42,9 @@ export const ShowDetails = () => {
 
   useEffect(() => {
     if (cast) {
-      console.log(cast.length);
       setTopActors(cast.slice(0, 6));
     }
   }, [cast]);
-
-  useEffect(() => {
-    if (topActors) {
-      console.log(topActors);
-    }
-  }, [topActors]);
 
   return show && cast ? (
     <>
@@ -103,7 +96,6 @@ export const ShowDetails = () => {
               <ActorsSection>
                 {topActors ? (
                   topActors.map((actor) => {
-                    console.log(actor);
                     return (
                       <ActorCard
                         style={{
@@ -174,7 +166,6 @@ export const ShowDetails = () => {
             <ActorsSection>
               {topActors ? (
                 topActors.map((actor) => {
-                  console.log(actor);
                   return (
                     <ActorCard
                       style={{

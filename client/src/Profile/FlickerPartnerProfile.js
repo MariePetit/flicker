@@ -16,7 +16,6 @@ export const FlickerPartnerProfile = () => {
   const [lastMovieWatched, setLastMovieWatched] = useState(null);
   const [lastLiked, setLastLiked] = useState(null);
 
-  console.log(linkedUser);
   useEffect(() => {
     if (linkedUser && linkedUser.watched.length > 0) {
       setLastMovieWatched(linkedUser.watched[linkedUser.watched.length - 1]);
