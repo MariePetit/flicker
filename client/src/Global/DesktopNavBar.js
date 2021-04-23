@@ -33,6 +33,7 @@ const DesktopNavBar = () => {
             <Link to="/movies">Movies</Link>
             <Link to="/shows">Shows</Link>
             <Link to="/watchlists">Watchlists</Link>
+            <Link to="/about">About</Link>
           </NavSection>
         )}
         <NavSection>
