@@ -46,8 +46,8 @@ export const SmallCard = ({ movie, show }) => {
 const Wrapper = styled.div`
   width: 400px;
   height: 600px;
-  margin: 20px;
-  border: 2px solid var(--secondary-user-color);
+  margin: 10px 20px 20px 20px;
+  border: 1px solid var(--secondary-user-color);
   border-radius: 8px;
   transition: 0.2s ease-in-out;
   overflow: hidden;

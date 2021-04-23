@@ -19,6 +19,8 @@ const {
   addToLiked,
   addToDisliked,
   linkUser,
+  getMovieCredits,
+  getShowCredits,
 } = require("./handlers");
 
 const PORT = 8000;
@@ -45,6 +47,7 @@ app.use("/", express.static(__dirname + "/"));
 //ENDPOINTS
 app.get("/popular-movies", getAllMovies);
 app.post("/movies/:id", getMovieDetails);
+app.get("/movie-credits/:id", getMovieCredits);
 app.get("/movie-genres", getMovieGenres);
 app.get("/show-genres", getShowGenres);
 app.post("/create-account", createUser);
@@ -53,6 +56,7 @@ app.get("/user/:id", findUser);
 app.post("/link-user/:id", linkUser);
 app.get("/shows", getTvShows);
 app.post("/shows/:id", getTvShowDetails);
+app.get("/show-credits/:id", getShowCredits);
 app.post("/watchlist/:id", addToPersonalWatchlist);
 app.delete("/watchlist/:id", removeFromWatchlist);
 app.post("/watched/:id", addToWatched);

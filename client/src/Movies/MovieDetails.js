@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import MediaQuery from "react-responsive";
 
 import styled from "styled-components";
 
@@ -7,8 +8,12 @@ const moment = require("moment");
 
 export const MovieDetails = () => {
   const [movie, setMovie] = useState(null);
+  const [cast, setCast] = useState(null);
+  const [topActors, setTopActors] = useState(null);
+
   let specificMovie = useParams();
 
+  console.log(specificMovie);
   useEffect(() => {
     fetch("/movies/:id", {
       method: "POST",
@@ -26,62 +31,187 @@ export const MovieDetails = () => {
       });
   }, [specificMovie]);
 
-  return movie ? (
-    <Wrapper>
-      <PosterSection>
-        <Frame
-          style={{
-            backgroundImage: `url(http://image.tmdb.org/t/p/w500${movie.poster_path})`,
-            backgroundPosition: "center",
-            backgroundSize: "cover",
-          }}
-        >
-          <Section1>
-            <div style={{ opacity: "0.6", fontStyle: "italic" }}>
-              {moment(movie.release_date).format("YYYY")}
+  useEffect(() => {
+    fetch(`/movie-credits/${specificMovie.id}`)
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.status === 200) {
+          setCast(json.data.cast);
+        }
+      });
+  }, [specificMovie]);
+
+  useEffect(() => {
+    if (cast) {
+      console.log(cast.length);
+      setTopActors(cast.slice(0, 6));
+    }
+  }, [cast]);
+
+  useEffect(() => {
+    if (topActors) {
+      console.log(topActors);
+    }
+  }, [topActors]);
+
+  return movie && cast ? (
+    <>
+      {/*---------------------------------- DESKTOP -------------------------------------*/}
+      <MediaQuery minWidth={1049}>
+        <DesktopWrapper>
+          <PosterSection>
+            <Frame
+              style={{
+                backgroundImage: `url(http://image.tmdb.org/t/p/w500${movie.poster_path})`,
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+              }}
+            >
+              <MovieInfo>
+                <div style={{ opacity: "0.6", fontStyle: "italic" }}>
+                  {moment(movie.release_date).format("YYYY")}
+                </div>
+                <Genres>
+                  {movie.genres.map((genre) => {
+                    return <Genre>{genre["name"]}</Genre>;
+                  })}
+                </Genres>
+              </MovieInfo>
+            </Frame>
+          </PosterSection>
+
+          <DescriptionSection>
+            <Backdrop
+              style={{
+                backgroundImage: `url(http://image.tmdb.org/t/p/w500${movie.backdrop_path})`,
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                backgroundPositionY: "20%",
+                height: "150px",
+              }}
+            >
+              <Title>
+                <h3>{movie.title}</h3>
+                {movie.tagline && <h4>"{movie.tagline}"</h4>}
+              </Title>
+            </Backdrop>
+            <div>
+              <p>{movie.overview}</p>
             </div>
-            <Genres>
-              {movie.genres.map((genre) => {
-                return <Genre>{genre["name"]}</Genre>;
-              })}
-            </Genres>
-          </Section1>
-        </Frame>
-      </PosterSection>
-      <DescriptionSection>
-        <div
-          style={{
-            backgroundImage: `url(http://image.tmdb.org/t/p/w500${movie.backdrop_path})`,
-            backgroundPosition: "center",
-            backgroundSize: "cover",
-            backgroundPositionY: "20%",
-            height: "20%",
-          }}
-        >
-          <Title>
-            <h3>{movie.title}</h3>
-            {movie.tagline && <h4>"{movie.tagline}"</h4>}
-          </Title>
-        </div>
-        <div>
-          <p>{movie.overview}</p>
-        </div>
-      </DescriptionSection>
-    </Wrapper>
+
+            <Cast>
+              <h3>Cast</h3>
+              <ActorsSection>
+                {topActors ? (
+                  topActors.map((actor) => {
+                    console.log(actor);
+                    return (
+                      <ActorCard
+                        style={{
+                          backgroundImage: `url(http://image.tmdb.org/t/p/w500${actor.profile_path})`,
+                          backgroundPosition: "center",
+                          backgroundSize: "cover",
+                        }}
+                      >
+                        <ActorName>
+                          <h4>{actor.name}</h4>
+                        </ActorName>
+                      </ActorCard>
+                    );
+                  })
+                ) : (
+                  <div>Oops, something went wrong.</div>
+                )}
+              </ActorsSection>
+            </Cast>
+          </DescriptionSection>
+        </DesktopWrapper>
+      </MediaQuery>
+
+      {/*------------------------------------ MOBILE -------------------------------------*/}
+      <MediaQuery maxWidth={1048}>
+        <MobileWrapper>
+          <MobileBackdrop
+            style={{
+              backgroundImage: `url(http://image.tmdb.org/t/p/w500${movie.backdrop_path})`,
+              backgroundPosition: "center",
+              backgroundSize: "cover",
+              backgroundPositionY: "20%",
+              height: "100px",
+            }}
+          >
+            <Title>
+              <h3>{movie.title}</h3>
+              {movie.tagline && <h4>"{movie.tagline}"</h4>}
+            </Title>
+          </MobileBackdrop>
+          <PosterSection>
+            <MobilePosterFrame
+              style={{
+                backgroundImage: `url(http://image.tmdb.org/t/p/w500${movie.poster_path})`,
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+              }}
+            >
+              <MovieInfo>
+                <div style={{ opacity: "0.6", fontStyle: "italic" }}>
+                  {moment(movie.release_date).format("YYYY")}
+                </div>
+                <Genres>
+                  {movie.genres.map((genre) => {
+                    return <Genre>{genre["name"]}</Genre>;
+                  })}
+                </Genres>
+              </MovieInfo>
+            </MobilePosterFrame>
+          </PosterSection>
+
+          <div>
+            <p>{movie.overview}</p>
+          </div>
+          <Cast>
+            <h3>Cast</h3>
+            <ActorsSection>
+              {topActors ? (
+                topActors.map((actor) => {
+                  console.log(actor);
+                  return (
+                    <ActorCard
+                      style={{
+                        backgroundImage: `url(http://image.tmdb.org/t/p/w500${actor.profile_path})`,
+                        backgroundPosition: "center",
+                        backgroundSize: "cover",
+                      }}
+                    >
+                      <ActorName>
+                        <h4>{actor.name}</h4>
+                      </ActorName>
+                    </ActorCard>
+                  );
+                })
+              ) : (
+                <div>Oops, something went wrong.</div>
+              )}
+            </ActorsSection>
+          </Cast>
+        </MobileWrapper>
+      </MediaQuery>
+    </>
   ) : (
     <div>Loading...</div>
   );
 };
 
-const Wrapper = styled.div`
+const DesktopWrapper = styled.div`
   display: flex;
-  margin: 120px 100px 0 100px;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin: 120px 20px 0 20px;
   position: relative;
+  width: 100vw;
 `;
 
-const PosterSection = styled.div`
-  width: 502px;
-`;
+const PosterSection = styled.div``;
 
 const DescriptionSection = styled.div`
   padding: 0 50px 30px 50px;
@@ -106,6 +236,10 @@ const DescriptionSection = styled.div`
   }
 `;
 
+const Backdrop = styled.div`
+  margin-bottom: 20px;
+`;
+
 const Frame = styled.div`
   position: relative;
   width: 500px;
@@ -113,32 +247,21 @@ const Frame = styled.div`
   border: 2px solid var(--secondary-user-color);
 `;
 
-const Section1 = styled.div`
-  background-color: rgba(0, 0, 0, 0.5);
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  font-size: 20px;
-  padding: 20px 0 30px 0;
-`;
-
 const Genres = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
+  width: 100%;
   margin: 0 5px;
-  padding: 15px 0 0 0;
+  padding: 10px 0 0 0;
 `;
 
 const Genre = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  margin: 0 5px;
+  margin: 3px;
   font-size: 20px;
   opacity: 0.7;
 `;
@@ -152,4 +275,97 @@ const Title = styled.div`
   justify-content: center;
   backdrop-filter: blur(10px);
   height: 100%;
+`;
+
+const Cast = styled.div``;
+
+const ActorsSection = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+`;
+
+const ActorCard = styled.div`
+  width: 200px;
+  height: 300px;
+  margin: 10px;
+  border: 2px solid var(--secondary-user-color);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  position: relative;
+`;
+
+const ActorName = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 10px;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  z-index: 1;
+
+  h4 {
+    font-style: normal;
+  }
+`;
+
+// -------------------------------------------- MOBILE -------------------------------
+
+const MobileWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 30px;
+
+  h3 {
+    font-size: 26px;
+    text-align: center;
+    margin: 0 0 10px 0;
+  }
+
+  h4 {
+    font-size: 20px;
+    font-style: italic;
+    font-weight: normal;
+    text-align: center;
+  }
+
+  p {
+    font-size: 18px;
+    font-weight: normal;
+    padding: 30px 0;
+  }
+`;
+
+const MobilePosterFrame = styled.div`
+  width: 300px;
+  height: 450px;
+  border: 2px solid var(--secondary-user-color);
+  position: relative;
+`;
+
+const MobileBackdrop = styled.div`
+  width: 100%;
+  margin-bottom: 20px;
+`;
+
+const MovieInfo = styled.div`
+  background-color: rgba(0, 0, 0, 0.78);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: 20px;
+  padding: 15px 0;
 `;

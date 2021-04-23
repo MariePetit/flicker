@@ -285,6 +285,46 @@ const getMovieDetails = async (req, res) => {
   }
 };
 
+//-----------------------------GET MOVIE CREDITS------------------------------------
+const getMovieCredits = async (req, res) => {
+  const { id } = req.params;
+  const movie_id = id;
+
+  const url = `https://api.themoviedb.org/3/movie/${movie_id}/credits?api_key=${API_KEY}&language=en-US`;
+
+  try {
+    await fetch(url)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        res.status(200).json({ status: 200, data });
+      });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+//-----------------------------GET SHOW CREDITS------------------------------------
+const getShowCredits = async (req, res) => {
+  const { id } = req.params;
+  const show_id = id;
+
+  const url = `https://api.themoviedb.org/3/tv/${show_id}/credits?api_key=${API_KEY}&language=en-US`;
+
+  try {
+    await fetch(url)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        res.status(200).json({ status: 200, data });
+      });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 //-----------------------------GET POPULAR SHOWS------------------------------------
 const getTvShows = async (req, res) => {
   const url1 = `https://api.themoviedb.org/3/tv/popular?api_key=${API_KEY}&language=en-US&page=1`;
@@ -807,7 +847,9 @@ module.exports = {
   getShowGenres,
   getTvShows,
   getMovieDetails,
+  getMovieCredits,
   getTvShowDetails,
+  getShowCredits,
   addToPersonalWatchlist,
   addToWatched,
   removeFromWatchlist,
