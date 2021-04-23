@@ -50,6 +50,7 @@ const MobileNavBar = () => {
                 <Link to="/movies">Movies</Link>
                 <Link to="/shows">Shows</Link>
                 <Link to="/watchlists">Watchlists</Link>
+                <Link to="/about">About</Link>
                 <Button onClick={onClick}>
                   {currentUser ? "Sign out" : "Sign In"}
                 </Button>

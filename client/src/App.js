@@ -18,6 +18,7 @@ import { SearchUser } from "./Profile/SearchUser";
 import { PopularMovies } from "./Movies/PopularMovies";
 import { SpecificShowGenre } from "./Shows/SpecificShowGenre";
 import { Header } from "./Global/Header";
+import { AboutPage } from "./About/AboutPage";
 
 function App() {
   return (
@@ -32,22 +33,14 @@ function App() {
           <Route exact path="/create-account">
             <CreateAccount />
           </Route>
+          <Route exact path="/link-account">
+            <SearchUser />
+          </Route>
           <Route exact path="/log-in">
             <LogIn />
           </Route>
           <Route exact path="/movies">
             <PopularMovies />
-          </Route>
-          <Route exact path="/shows">
-            <ShowGenres />
-            <TvShows />
-          </Route>
-          <Route exact path="/show-genres/:name">
-            <ShowGenres />
-            <SpecificShowGenre />
-          </Route>
-          <Route exact path="/watchlists">
-            <WatchlistsPage />
           </Route>
           <Route exact path="/movie-genres/:name">
             <MovieGenres />
@@ -59,11 +52,22 @@ function App() {
           <Route exact path="/profile">
             <Profile />
           </Route>
+          <Route exact path="/shows">
+            <ShowGenres />
+            <TvShows />
+          </Route>
+          <Route exact path="/show-genres/:name">
+            <ShowGenres />
+            <SpecificShowGenre />
+          </Route>
           <Route exact path="/shows/:id">
             <ShowDetails />
           </Route>
-          <Route exact path="/link-account">
-            <SearchUser />
+          <Route exact path="/watchlists">
+            <WatchlistsPage />
+          </Route>
+          <Route exact to="/about">
+            <AboutPage />
           </Route>
           <Route exact to="/flicker-partner">
             <FlickerPartnerProfile />
