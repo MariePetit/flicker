@@ -1,15 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 import styled from "styled-components";
-import { WatchlistItemJoint } from "./WatchlistItemJoint";
 import FlickerContext from "../Global/FlickerContext";
-import { useSelector } from "react-redux";
 import { getJointWatchlist } from "../reducers";
+import { SmallCardJoint } from "./SmallCardJoint";
 
 export const JointWatchlist = () => {
   const { currentUser } = useContext(FlickerContext);
   const [jointWatchlist, setJointWatchlist] = useState([]);
-
   const watchlistItems = useSelector(getJointWatchlist);
 
   useEffect(() => {
@@ -17,16 +16,13 @@ export const JointWatchlist = () => {
       setJointWatchlist(currentUser.jointWatchlist);
     }
   }, [currentUser]);
-
-  console.log("watchlistItems", watchlistItems.length);
-  console.log("jointWatchlist", jointWatchlist.length);
   return currentUser ? (
     <Wrapper>
       <h3>Joint Watchlist</h3>
       <WatchlistSection>
         {watchlistItems.length > 0 &&
           watchlistItems.map((item) => {
-            return <WatchlistItemJoint item={item} />;
+            return <SmallCardJoint item={item} />;
           })}
         {(watchlistItems === 0 || jointWatchlist.length === 0) && (
           <Default>Your watchlist is empty!</Default>
@@ -43,15 +39,15 @@ const Wrapper = styled.div`
   flex-direction: column;
 
   h3 {
-    margin: 10px 0;
-    font-size: 20px;
+    margin: 10px 15px 0 15px;
+    font-size: 30px;
     padding: 10px 0;
   }
 `;
 
 const WatchlistSection = styled.div`
-  border: 1px solid var(--primary-user-color);
-  border-radius: 12px;
+  display: flex;
+  flex-wrap: wrap;
 `;
 
 const Default = styled.div`

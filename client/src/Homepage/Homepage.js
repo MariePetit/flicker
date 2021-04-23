@@ -162,11 +162,11 @@ const Section = styled.div`
 
 const slideInFromTop1 = keyframes`
     0% {top: 0%; opacity: 0%}
-    100% {top: 150px; opacity: 100%}
+    100% {top: 130px; opacity: 100%}
 `;
 const slideInFromTop2 = keyframes`
     0% {top: 0%; opacity: 0%}
-    100% {top: 200px; opacity: 100%}
+    100% {top: 180px; opacity: 100%}
 `;
 
 const fadeIn = keyframes`

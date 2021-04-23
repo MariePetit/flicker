@@ -12,7 +12,7 @@ export const SmallCardAlt = ({ item }) => {
       }}
     >
       <Header>
-        <h2>{item.title || item.name}</h2>
+        <h4>{item.title || item.name}</h4>
       </Header>
     </Wrapper>
   );
@@ -39,7 +39,7 @@ const Header = styled.div`
   width: 100%;
   z-index: 1;
 
-  h2 {
+  h4 {
     padding: 0 5px;
     color: white;
     text-align: center;

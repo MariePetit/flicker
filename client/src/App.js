@@ -6,7 +6,7 @@ import { Homepage } from "./Homepage/Homepage";
 import { LogIn } from "./Homepage/LogIn";
 import styled from "styled-components";
 import { MovieGenres } from "./Movies/MovieGenres";
-import { SpecificGenre, SpecificMovieGenre } from "./Movies/SpecificMovieGenre";
+import { SpecificMovieGenre } from "./Movies/SpecificMovieGenre";
 import { TvShows } from "./Shows/TvShows";
 import { ShowGenres } from "./Shows/ShowGenres";
 import { MovieDetails } from "./Movies/MovieDetails";
