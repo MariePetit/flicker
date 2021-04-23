@@ -53,7 +53,7 @@ export const Profile = () => {
               <>
                 <div>Flickering with:</div>
                 <LinkedUserDetails>
-                  <NavLink to="/flicker-partner">
+                  <NavLink to="/profile/flicker-partner">
                     {linkedUser.firstName} {linkedUser.lastName}
                   </NavLink>
                 </LinkedUserDetails>
