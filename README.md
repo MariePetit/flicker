@@ -6,6 +6,8 @@ However, what makes Flicker so special is the possibility of linking your accoun
 
 _Note_: This app is still in early development, and there are many more features to come, so make sure you keep a lookout for upcoming updates!
 
+![Alt Text](https://media.giphy.com/media/5SGxo0JhfqsLBEv7ZJ/giphy.gif)
+
 ## What can you do on Flicker at this time?
 
 As part of Flicker's launch, here are our current functionalities:
