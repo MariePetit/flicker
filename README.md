@@ -6,7 +6,12 @@ However, what makes Flicker so special is the possibility of linking your accoun
 
 _Note_: This app is still in early development, and there are many more features to come, so make sure you keep a lookout for upcoming updates!
 
+## Youtube: https://youtu.be/QCDwgLBM3vQ
 ![Alt Text](https://media.giphy.com/media/5SGxo0JhfqsLBEv7ZJ/giphy.gif)
+![Alt Text](https://media.giphy.com/media/EdapgMvSYfMt87aJVc/giphy.gif)
+![Alt Text](https://media.giphy.com/media/rkA0UVc9IeY64JC0s4/giphy.gif)
+![Alt Text](https://media.giphy.com/media/bxivvoCveoHkxwZ5yN/giphy.gif)
+![Alt Text](https://media.giphy.com/media/L61JEwITOL6ozWOtRs/giphy.gif)
 
 ## What can you do on Flicker at this time?
 
